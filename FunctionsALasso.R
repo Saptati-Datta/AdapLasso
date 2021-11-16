@@ -54,3 +54,56 @@ soft <- function(a, lambda) {
     return(0)
   }
 }
+
+# Fit Adaptive LASSO on standardized data for a given lambda
+# Xtilde - centered and scaled X, n x p
+# Ytilde - centered Y, n x 1 (vector)
+# lamdba - tuning parameter
+# beta_start - p vector, an optional starting point for coordinate-descent algorithm
+# eps - precision level for convergence assessment, default 0.001
+fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda,gamma, beta_start = NULL, eps = 0.001) {
+  n <- length(Ytilde)
+  p <- ncol(Xtilde)
+  # [ToDo]  Check that n is the same between Xtilde and Ytilde
+  if (nrow(Xtilde) != length(Ytilde)) {
+    stop("Error: nrow(X) and length(Y) are not equal")
+  }
+  # Check that lambda is non-negative
+  if (lambda < 0) {
+    stop("Error: Lambda is negative")
+  }
+  #Check that gamma is non-negative
+  if (gamma < 0) {
+    stop("Error: gamma is negative")
+  }
+  #  Check for starting point beta_start. If none supplied, initialize with OLS. If supplied, check for compatibility with Xtilde in terms of p
+  if (is.null(beta_start)) {
+    beta_start <- solve(t(Xtilde) %*% Xtilde) %*% t(Xtilde) %*% Y
+  } else if (length(beta_start) != p) {
+    stop("Error: dimension of p and ncol(X) do not match", ncol(Xtilde))
+  }
+  #  Coordinate-descent implementation. Stop when the difference between objective functions is less than eps for the first time.
+  # For example, if you have 3 iterations with objectives 3, 1, 0.99999, your should return fmin = 0.99999, and not have another iteration
+  # Get sample size
+  n <- length(Ytilde)
+  beta <- beta_start
+  curr_obj <- lasso(Xtilde, Ytilde, beta, lambda)
+  last_obj <- Inf
+  r <- Ytilde - Xtilde %*% beta_start
+  while ((last_obj - curr_obj) > eps) {
+    for (j in 1:p)
+    {
+      beta_old <- beta[j]
+      beta[j] <- soft(beta[j] + (crossprod(Xtilde[, j], r)) / n, lambda)
+      r <- r + Xtilde[, j] * (beta_old - beta[j])
+    }
+    
+    last_obj <- curr_obj
+    curr_obj <- lasso(Xtilde, Ytilde, beta, lambda)
+  }
+  fmin <- curr_obj # Minimum value of the objective function
+  # Return
+  # beta - the solution (a vector)
+  # fmin - optimal function value (value of objective at beta, scalar)
+  return(list(beta = beta, fmin = fmin))
+}
