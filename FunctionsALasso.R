@@ -43,3 +43,14 @@ standardizeXY <- function(X, Y, gamma) {
   # weights - defined as sqrt(X_j^{\top}X_j/n) after centering of X but before scaling
   return(list(Xtilde = Xtilde, Ytilde = Ytilde, Ymean = Ymean,Xmeans = Xmeans))
 }
+
+#Soft-thresholding of a scalar a at level lambda
+soft <- function(a, lambda) {
+  if (a > lambda) {
+    return(a - lambda)
+  } else if (a < (-lambda)) {
+    return(a + lambda)
+  } else {
+    return(0)
+  }
+}
