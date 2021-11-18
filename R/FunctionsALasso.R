@@ -10,7 +10,7 @@ scale_X <- function(X, Y, gamma) {
   lambda_min <- cv_mod$lambda.min
   p <- ncol(X)
   n <- nrow(X)
-  if (rankMatrix(X) < p) {
+  if ( rankMatrix(X) < p) {
     # Calculating ridge estimator
     beta <- solve(crossprod(X) + lambda_min * diag(p)) %*% crossprod(X, Y)
   } else {
@@ -105,7 +105,7 @@ fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, 
       beta[j] <- soft(beta[j] + (crossprod(Xtilde[, j], r)) / n, lambda)
       r <- r + Xtilde[, j] * (beta_old - beta[j])
     }
-    
+
     last_obj <- curr_obj
     curr_obj <- lasso(Xtilde, Ytilde, beta, lambda)
   }
@@ -128,8 +128,8 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
   if (nrow(Xtilde) != length(Ytilde)) {
     stop("Dimensions of X and Y do not match")
   }
-  
-  # Check for the user-supplied lambda-seq (see below) 
+
+  # Check for the user-supplied lambda-seq (see below)
   if(is.null(lambda_seq)==FALSE){
     # If lambda_seq is supplied, only keep values that are >= 0, and make sure the values are sorted from largest to smallest. If none of the supplied values satisfy the requirement, print the warning message and proceed as if the values were not supplied.
     lambda_seq <- sort(lambda_seq[lambda_seq >= 0], decreasing = TRUE)
@@ -145,21 +145,21 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
     lambda_max <- max(abs(crossprod(Xtilde, Ytilde)) / n)
     lambda_seq <- exp(seq(log(lambda_max), log(0.01), length = n_lambda))
   }
-  
+
   p <- ncol(Xtilde)
   # Apply fitadapLASSOstandardized going from largest to smallest lambda (make sure supplied eps is carried over). Use warm starts strategy discussed in class for setting the starting values.
   beta <- rep(0, p)
   beta_mat <- matrix(0, p, n_lambda)
   fmin_vec <- rep(0, n_lambda)
-  
+
   for (i in 1:(n_lambda)) {
     fit <- fitadapLASSOstandardized(Xtilde, Ytilde, lambda_seq[i], beta_start = beta, eps)
     beta_mat[, i] <- fit$beta
     fmin_vec[i] <- fit$fmin
     beta <- fit$beta
   }
-  
-  
+
+
   # Return output
   # lambda_seq - the actual sequence of tuning parameters used
   # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value
@@ -178,7 +178,7 @@ fitLASSO <- function(X, Y, lambda_seq = NULL, gamma=0.01, n_lambda = 60, eps = 0
   Std <- standardizeXY(X, Y,gamma)
   X <- Std$Xtilde
   Y <- Std$Ytilde
-  
+
   #  Fit Lasso on a sequence of values using fitLASSOstandardized_seq (make sure the parameters carry over)
   fit <- fitadapLASSOstandardized_seq(X, Y, lambda_seq, n_lambda, eps)
   n_lambda <- length(fit$lambda_seq)
@@ -187,7 +187,7 @@ fitLASSO <- function(X, Y, lambda_seq = NULL, gamma=0.01, n_lambda = 60, eps = 0
   beta <- fit$beta_mat
   beta_mat <- beta / (Std$weights)
   beta0_vec <- Std$Ymean - (as.matrix(Std$Xmeans) %*% beta_mat)
-  
+
   # Return output
   # lambda_seq - the actual sequence of tuning parameters used
   # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
@@ -213,52 +213,52 @@ cvLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma=0.01, k = 5, f
   if (is.null(fold_ids)) {
     fold_ids <- sample(1:n, size = n) %% k + 1
   }
-  
-  
+
+
   # Defining vectors for loop over folds and lambdas
   lambda_seq <- fit_lasso$lambda_seq
   n_lambda <- length(lambda_seq)
   cvm <- rep(NA, n_lambda) # want to have CV(lambda)
   cvse <- rep(NA, n_lambda) # want to have SE_CV(lambda)
   cv_folds <- matrix(NA, k, n_lambda)
-  
+
   for (fold in 1:k) {
     # Create training data xtrain and ytrain, everything except fold
     Xtrain <- X[fold_ids != fold, ]
     Ytrain <- Y[fold_ids != fold]
-    
-    
+
+
     # Create testing data xtest and ytest, everything in fold
     Xtest <- X[fold_ids == fold, ]
     Ytest <- Y[fold_ids == fold]
-    
-    
-    
-    
-    
+
+
+
+
+
     # Calculate LASSO on each fold using fitLASSO, and perform any additional calculations needed for CV(lambda) and SE_CV(lambda)
-    
+
     # Fitting Lasso
     Lasso <- fitLASSO(Xtrain, Ytrain, lambda_seq, n_lambda, eps)
-    
-    
-    
+
+
+
     # [ToDo] Complete with anything else you need for cvm and cvse
     cv_folds[fold, ] <- colSums((Ytest - t(c(Lasso$beta0_vec) + t(Xtest %*% Lasso$beta_mat)))^2)
   }
-  
-  
+
+
   # To get cvm and cvse from cv_folds
   beta_mat <- fit_lasso$beta_mat
   beta0_vec <- fit_lasso$beta0_vec
   cvm <- colMeans(cv_folds)
   cvse <- apply(cv_folds, 2, sd) / sqrt(k)
-  
+
   #  Find lambda_min and gamma
   min <- which.min(cvm)
   lambda_min <- lambda_seq[min]
-  
-  
+
+
   #  Find lambda_1SE
   lambda_seqvec <- subset(lambda_seq, cvm <= (cvm[min] + cvse[min]))
   lambda_1se <- max(lambda_seqvec)
