@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{standardizeXY}
 \alias{standardizeXY}
-\title{Title Standardizes the input design matricex X and output vector Y to mean 0 and scales X}
+\title{Title Standardizes the input design matrix X and output vector Y to mean 0 and scales X}
 \usage{
 standardizeXY(X, Y, gamma)
 }
@@ -17,7 +17,7 @@ standardizeXY(X, Y, gamma)
 Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w which is obtained from scale X
 }
 \description{
-Title Standardizes the input design matricex X and output vector Y to mean 0 and scales X
+Title Standardizes the input design matrix X and output vector Y to mean 0 and scales X
 }
 \examples{
 X <- matrix(rnorm(500), 50, 10)

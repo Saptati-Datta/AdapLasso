@@ -46,7 +46,7 @@ scale_X <- function(X, Y, gamma) {
 
 
 # STANDARDIZING INPUTS
-#' Title Standardizes the input design matricex X and output vector Y to mean 0 and scales X
+#' Title Standardizes the input design matrix X and output vector Y to mean 0 and scales X
 #'
 #' @param X n x p design matrix of inputs
 #' @param Y n x 1 output vector
