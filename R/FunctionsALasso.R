@@ -9,7 +9,7 @@
 #' @param gamma a scalar(>0) input used in the weight(user input)
 #'
 #' @return X_w(the scaled design matrix),weights
-#' @export
+#' @export scale_X
 #'
 #' @examples
 #' EXAMPLE
