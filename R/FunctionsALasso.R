@@ -9,7 +9,7 @@
 #' @param gamma a scalar(>0) input used in the weight(user input)
 #'
 #' @return X_w(the scaled design matrix),weights
-#' @export Divides a design matrix by weights used in adaptive lasso and returns weights and the weighted design matrix
+#' @export
 #'
 #' @examples
 #' EXAMPLE
