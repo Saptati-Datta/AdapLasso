@@ -52,7 +52,7 @@ scale_X <- function(X, Y, gamma) {
 #' @param Y n x 1 output vector
 #' @param gamma a scalar (>0) input(user-defined) used in the weights
 #'
-#' @return Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w from scale X
+#' @return Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w which is obtained from scale X
 #' @export standardizeXY
 #'
 #' @examples

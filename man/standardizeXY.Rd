@@ -14,7 +14,7 @@ standardizeXY(X, Y, gamma)
 \item{gamma}{a scalar (>0) input(user-defined) used in the weights}
 }
 \value{
-Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w from scale X
+Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w which is obtained from scale X
 }
 \description{
 Title Standardizes the input design matricex X and output vector Y to mean 0 and scales X
