@@ -5,9 +5,8 @@ Authors@R:
     person(given = "Saptati",
            family = "Datta",
            role = c("aut", "cre"),
-           email = "saptati@tamu.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "saptati@tamu.edu")
+Description: Lasso is one of the most popular techniques to fit linear regression by using a penalty which sets some of the coefficients to be zero, thereby facilitating variable selection and simultaneous estimation.However, there exists certain scenarios where ordinary Lasso turns out to be inconsistent. The main reason for such a discrepancy is that Lasso does not always enjoy oracle properties. In such a case, it is convenient to take resort to Adaptive Lasso technique which satisfies the oracle properties, that is, it has the ability to perform the same asymptotically, as if we knew the true specification of the model beforehand.Such an algorithm was proposed by Zou(2006).Here, adaptive lasso has been computed using LARS algorithm.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
