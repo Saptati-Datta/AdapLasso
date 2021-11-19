@@ -46,6 +46,31 @@ scale_X <- function(X, Y, gamma) {
 
 
 # STANDARDIZING INPUTS
+#' Title Standardizes the input design matricex X and output vector Y to mean 0 and scales X
+#'
+#' @param X n x p design matrix of inputs
+#' @param Y n x 1 output vector
+#' @param gamma a scalar (>0) input(user-defined) used in the weights
+#'
+#' @return Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w from scale X
+#' @export standardizeXY
+#'
+#' @examples
+#' X <- matrix(rnorm(500), 50, 10)
+#' Y <- rnorm(50)
+#' gamma <- 2
+#' #Standardizing X and Y
+#' std <- standardizeXY(X , Y , gamma)
+#' #Deriving weighted and centered design matrix
+#' Xtilde <- std$Xtilde
+#' #Column means of centered X_w
+#' Xmeans <- std$Xmeans
+#' #Deriving centered Y
+#' Ytilde <- std$Ytilde
+#' #Mean of Ytilde
+#' Ymean <- std$Ymean
+#' # Weights
+#' weights <- std$weights
 standardizeXY <- function(X, Y, gamma) {
   n <- length(Y)
   p <- ncol(X)
