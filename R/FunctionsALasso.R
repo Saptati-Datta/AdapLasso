@@ -280,7 +280,7 @@ cv.gamma <- function(X,Y,lambda_seq = NULL,n_lambda=60,gamma_seq=NULL, n_gamma=6
   #  Check for the user-supplied gamma-seq (see below)
   if(is.null(lambda_seq) == FALSE){
     # If lambda_seq is supplied, only keep values that are >= 0, and make sure the values are sorted from largest to smallest. If none of the supplied values satisfy the requirement, print the warning message and proceed as if the values were not supplied.
-    lambda_seq <- sort(gamma_seq[gamma_seq > 0], decreasing = TRUE)
+    lambda_seq <- gamma_seq[gamma_seq > 0]
     if(length(gamma_seq) == 0){
       print("Warning: gamma sequence not supplied")
       gamma_seq <- NULL
@@ -290,20 +290,20 @@ cv.gamma <- function(X,Y,lambda_seq = NULL,n_lambda=60,gamma_seq=NULL, n_gamma=6
   }
   # If lambda_seq is not supplied, calculate lambda_max (the minimal value of lambda that gives zero solution), and create a sequence of length n_lambda as
   if (is.null(gamma_seq)) {
-    gamma_seq <- seq(0.0001, 10, by= 0.01)
+    gamma_seq <- seq(0.0001, 10, by= 0.1)
     n_gamma <- length(gamma_seq)
   }
-  fit_cv <- cvLASSO(X, Y, lambda_seq, n_lambda , k ,gamma, fold_ids, eps)
-  lambda_seq <- fit_cv$lambda_seq
-  n_lambda <- length(lambda_seq)
+
   #defining a cross-validation matrix
-  cvm <- matrix(NA , n_lambda , n_gamma)
+  cvm <- matrix(NA , n_gamma , n_lambda)
 
   for(i in 1:n_gamma){
-    cv <- cvLASSO(X, Y, lambda_seq, n_lambda , k ,gamma_seq[i], fold_ids, eps)
+    cv <- cvLASSO(X, Y, lambda_seq, n_lambda ,gamma_seq[i], k, fold_ids, eps)
     cvm[i, ] <- cv$cvm
   }
-gamma_min <- which(cvm == min(cvm), arr.ind = T)[1]
+gamma_min_ind <- which(cvm == min(cvm), arr.ind = T)[1]
+gamma_min <- gamma_seq[gamma_min_ind]
+
 #Return
 return(list(cvm=cvm , gamma_min = gamma_min))
 }
