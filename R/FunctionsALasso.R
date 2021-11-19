@@ -98,7 +98,7 @@ fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, 
   curr_obj <- lasso(Xtilde, Ytilde, beta, lambda)
   last_obj <- Inf
   r <- Ytilde - Xtilde %*% beta_start
-  while ((last_obj - curr_obj) > eps) {
+  while (abs(last_obj - curr_obj) > eps) {
     for (j in 1:p)
     {
       beta_old <- beta[j]
