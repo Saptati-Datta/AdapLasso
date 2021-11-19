@@ -2,6 +2,16 @@
 
 # Transforming X by dividing with elements of the weight matrix
 # Computing scaled inputs using LARS algorithm
+#' Title: scale_X Scales a matrix of inputs according to  LARS algorithm
+#' Divides a design matrix by weights used in adaptive lasso
+#' @param X n x p  design matrix of inputs
+#' @param Y n x 1 vector of outputs
+#' @param gamma a scalar(>0) input used in the weight
+#'
+#' @return X_w(the scaled design matrix),weights
+#' @export
+#'
+#' @examples
 scale_X <- function(X, Y, gamma) {
   library(glmnet)
   # Computing the best lambda for the Ridge estimator
