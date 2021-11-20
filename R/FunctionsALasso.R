@@ -246,6 +246,16 @@ fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, 
 #' @export fitadapLASSOstandardized_seq
 #'
 #' @examples
+#' X <- matrix(rnorm(500), 50, 10)
+#' Y <- rnorm(50)
+#' gamma <- 2
+#' #Standardizing X and Y
+#' std <- standardizeXY(X , Y , gamma)
+#' #Deriving weighted and centered design matrix
+#' Xtilde <- std$Xtilde
+#' #Deriving centered Y
+#' Ytilde <- std$Ytilde
+#' fit <- fitadapLASSOstandardized_seq(Xtilde, Ytilde)
 fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda = 60, eps = 0.001) {
   n <- length(Ytilde)
   # Check that n is the same between Xtilde and Ytilde
