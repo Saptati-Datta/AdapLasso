@@ -234,6 +234,18 @@ fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, 
 # lamdba_seq - sequence of tuning parameters, optional
 # n_lambda - length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
 # eps - precision level for convergence assessment, default 0.001
+#' Title fits Adaptive Lasso on a sequence of lambda values based on standardized data
+#'
+#' @param Xtilde n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm
+#' @param Ytilde n x 1 vector of centered outputs
+#' @param lambda_seq (optional)sequence of tuning parameters
+#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
+#' @param eps precision level for convergence assessment, default 0.001
+#'
+#' @return lambda_seq=the actual sequence of tuning parameters used,beta_mat=p x length(lambda_seq) matrix of corresponding solutions at each lambda value,fmin_vec = fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
+#' @export fitadapLASSOstandardized_seq
+#'
+#' @examples
 fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda = 60, eps = 0.001) {
   n <- length(Ytilde)
   # Check that n is the same between Xtilde and Ytilde
