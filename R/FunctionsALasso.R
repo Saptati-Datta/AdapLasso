@@ -121,6 +121,17 @@ soft <- function(a, lambda) {
 # lamdba - tuning parameter
 # beta - value of beta at which to evaluate the function
 # Computing the objective function
+#' Title Function for soft-thresholding
+#'
+#' @param Xtilde
+#' @param Ytilde
+#' @param beta
+#' @param lambda
+#'
+#' @return
+#' @export
+#'
+#' @examples
 lasso <- function(Xtilde, Ytilde, beta, lambda) {
   n <- length(Ytilde)
   # objective function
