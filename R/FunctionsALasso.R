@@ -123,15 +123,30 @@ soft <- function(a, lambda) {
 # Computing the objective function
 #' Title Function for soft-thresholding
 #'
-#' @param Xtilde
-#' @param Ytilde
-#' @param beta
-#' @param lambda
+#' @param Xtilde n x p design matrix X scaled according to LARS algorithm and centered to mean 0
+#' @param Ytilde n x 1 centered output vector
+#' @param beta   p x 1 vector of parameters
+#' @param lambda tuning parameter(scalar)
 #'
-#' @return
-#' @export
+#' @return Objective function for Lasso
+#' @export lasso
 #'
 #' @examples
+#' X <- matrix(rnorm(500), 50, 10)
+#' Y <- rnorm(50)
+#' gamma <- 2
+#' #Standardizing X and Y
+#' std <- standardizeXY(X , Y , gamma)
+#' #Deriving weighted and centered design matrix
+#' Xtilde <- std$Xtilde
+#' #Deriving centered Y
+#' Ytilde <- std$Ytilde
+#' #Defining beta
+#' beta <- solve(crossprod(X)) %*% t(X) %*% Y
+#' #Lambda value
+#' lambda <- 2
+#' #Objective function
+#' obj <- lasso(Xtilde, Ytilde, beta, lambda)
 lasso <- function(Xtilde, Ytilde, beta, lambda) {
   n <- length(Ytilde)
   # objective function
