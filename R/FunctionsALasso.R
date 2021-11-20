@@ -95,6 +95,18 @@ standardizeXY <- function(X, Y, gamma) {
 # Soft-thresholding of a scalar a at level lambda
 # a- scalar input
 # lambda-tuning parameter
+#' Title
+#'
+#' @param a scalar to be soft-thresholded
+#' @param lambda level of soft thresholding
+#'
+#' @return soft-thresholded value
+#' @export soft
+#'
+#' @examples
+#' a = 2
+#' lambda = 1
+#' soft(a , lambda)
 soft <- function(a, lambda) {
   if (a > lambda) {
     return(a - lambda)
