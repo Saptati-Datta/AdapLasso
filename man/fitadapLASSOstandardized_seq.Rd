@@ -29,3 +29,15 @@ lambda_seq=the actual sequence of tuning parameters used,beta_mat=p x length(lam
 \description{
 Title fits Adaptive Lasso on a sequence of lambda values based on standardized data
 }
+\examples{
+X <- matrix(rnorm(500), 50, 10)
+Y <- rnorm(50)
+gamma <- 2
+#Standardizing X and Y
+std <- standardizeXY(X , Y , gamma)
+#Deriving weighted and centered design matrix
+Xtilde <- std$Xtilde
+#Deriving centered Y
+Ytilde <- std$Ytilde
+fit <- fitadapLASSOstandardized_seq(Xtilde, Ytilde)
+}
