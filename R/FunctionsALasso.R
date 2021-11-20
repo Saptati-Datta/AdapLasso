@@ -309,14 +309,26 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
 # n_lambda - length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
 # eps - precision level for convergence assessment, default 0.001
 
-#  Fit LASSO and perform cross-validation to select the best fit
-# X - n x p matrix of covariates
-# Y - n x 1 response vector
-# lambda_seq - sequence of tuning parameters, optional
-# n_lambda - length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
-# k - number of folds for k-fold cross-validation, default is 5
-# fold_ids - (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
-# eps - precision level for convergence assessment, default 0.001
+
+#' Title Fits adaptive LASSO
+#'
+#' @param X n x p matrix of covariates
+#' @param Y n x 1 response vector
+#' @param lambda_seq (optional)sequence of tuning parameters
+#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user(default 60)
+#' @param gamma scalar used in the weight vector(default value 0.01)
+#' @param eps precision level for convergence assessment, default 0.001
+#'
+#' @return lambda_seq = the actual sequence of tuning parameters used,beta_mat = p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec = length(lambda_seq) vector of intercepts (original data without center or scale)
+#' @export fitadapLASSO
+#'
+#' @examples
+#' #EXAMPLE 1
+#'  X <- matrix(rnorm(500), 50, 10)
+#' Y <- rnorm(50)
+#' gamma <- 2
+#' # Fits adaptive LASSO
+#' fit <- fitadapLASSO(X , Y , gamma)
 fitadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, eps = 0.001) {
   # Center and standardize X,Y based on standardizeXY function
   sc <- scale_X(X, Y, gamma)
