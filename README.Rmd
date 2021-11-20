@@ -1,6 +1,8 @@
 ---
-title: "README"
+title: "**Adaptive Lasso Using LARS Algorithm**"
 output: html_document
 ---
+<font size = "6"> **INTENDED FUNCTIONALITY**
+
 
 
