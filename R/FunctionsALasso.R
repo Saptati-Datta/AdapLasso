@@ -161,6 +161,30 @@ lasso <- function(Xtilde, Ytilde, beta, lambda) {
 # lamdba - tuning parameter
 # beta_start - p vector, an optional starting point for coordinate-descent algorithm
 # eps - precision level for convergence assessment, default 0.001
+#' Title
+#'
+#' @param Xtilde n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm
+#' @param Ytilde n x 1 vector of centered outputs
+#' @param lambda tuning parameter
+#' @param beta_start p x 1, optional starting point for coordinate descent algorithm
+#' @param eps  precision level for convergence assessment, default 0.001
+#'
+#' @return beta = vector of parameters , fmin = optimal value of the objective function
+#' @export fitadapLASSOstandardized
+#'
+#' @examples
+#' X <- matrix(rnorm(500), 50, 10)
+#' Y <- rnorm(50)
+#' gamma <- 2
+#' #Standardizing X and Y
+#' std <- standardizeXY(X , Y , gamma)
+#' #Deriving weighted and centered design matrix
+#' Xtilde <- std$Xtilde
+#' #Deriving centered Y
+#' Ytilde <- std$Ytilde
+#' # tuning parameter
+#' lambda  <- 0.1
+#' fit <- fitadapLASSOstandardized(Xtilde, Ytilde, lambda)
 fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps = 0.001) {
   n <- length(Ytilde)
   p <- ncol(Xtilde)
