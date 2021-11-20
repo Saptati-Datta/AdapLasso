@@ -324,11 +324,17 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
 #'
 #' @examples
 #' #EXAMPLE 1
-#'  X <- matrix(rnorm(500), 50, 10)
+#' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
 #' gamma <- 2
 #' # Fits adaptive LASSO
-#' fit <- fitadapLASSO(X , Y , gamma)
+#' fit <- fitadapLASSO(X , Y , gamma = gamma)
+#' EXAMPLE 2
+#' X <- matrix(rchisq(500, 3), 50, 10)
+#' Y <- rbinom(50)
+#' lambda_seq <- runif(100, 1, 2)
+#' #Fits adaptive lasso
+#' fit2 <- fitadapLASSO(X, Y, lambda_seq = lambda_seq, gamma = 0.1, eps = 0.002 )
 fitadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, eps = 0.001) {
   # Center and standardize X,Y based on standardizeXY function
   sc <- scale_X(X, Y, gamma)
