@@ -329,7 +329,7 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
 #' gamma <- 2
 #' # Fits adaptive LASSO
 #' fit <- fitadapLASSO(X , Y , gamma = gamma)
-#' EXAMPLE 2
+#' # EXAMPLE 2
 #' X <- matrix(rchisq(500, 3), 50, 10)
 #' Y <- rbinom(50)
 #' lambda_seq <- runif(100, 1, 2)
@@ -361,6 +361,24 @@ fitadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, e
 
 
 
+#' Title Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value
+#'
+#' @param X n x p matrix of covariates
+#' @param Y n x 1 response vector
+#' @param lambda_seq (optional)sequence of tuning parameters
+#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
+#' @param gamma scalar used in the weight vector(default value 0.01)
+#' @param k  number of folds for k-fold cross-validation, default is 5
+#' @param fold_ids (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
+#' @param eps precision level for convergence assessment, default 0.001
+#'
+#' @return lambda_seq - the actual sequence of tuning parameters used, beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale),fold_ids - used splitting into folds from 1 to k (either as supplied or as generated in the beginning),lambda_min - selected lambda based on minimal rule,lambda_1se - selected lambda based on 1SE rule, cvm - values of CV(lambda) for each lambda,cvm - values of CV(lambda) for each lambda, cvse - values of SE_CV(lambda) for each lambda
+#' @export cvLASSO
+#'
+#' @examples
+#' X <- matrix(rnorm(500), 50, 10)
+#' Y <- rnorm(50)
+#' fit_cv <- cvLASSO(X, Y)
 cvLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5, fold_ids = NULL, eps = 0.001) {
   n <- length(Y)
   # Fit Lasso on original data using fitadapLASSO
@@ -424,6 +442,25 @@ cvLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5,
   return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec, fold_ids = fold_ids, lambda_min = lambda_min, lambda_1se = lambda_1se, cvm = cvm, cvse = cvse))
 }
 # Cross-Validation to choose gamma from a sequence of gamma values
+#' Title Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
+#'
+#' @param X n x p matrix of covariates
+#' @param Y n x 1 response vector
+#' @param lambda_seq (optional)sequence of tuning parameters
+#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
+#' @param gamma_seq (optional)sequence of gamma values(used in determining weights)
+#' @param n_gamma length of the desired sequence of gamma values
+#' @param k number of folds for k-fold cross-validation, default is 5
+#' @param fold_ids (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
+#' @param eps precision level for convergence assessment, default 0.001
+#'
+#' @return  cvm = a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma), gamma_min = optimal gamma
+#' @export cv.gamma
+#'
+#' @examples
+#' X <- matrix(rnorm(500), 50, 10)
+#' Y <- rnorm(50)
+#' fit_cv_gamma <- cv.gamma(X , Y)
 cv.gamma <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma_seq = NULL, n_gamma = 60, k = 5, fold_ids = NULL, eps = 0.001) {
   n <- length(Y)
   #  Check for the user-supplied gamma-seq (see below)

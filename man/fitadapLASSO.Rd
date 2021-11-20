@@ -32,7 +32,7 @@ Y <- rnorm(50)
 gamma <- 2
 # Fits adaptive LASSO
 fit <- fitadapLASSO(X , Y , gamma = gamma)
-EXAMPLE 2
+# EXAMPLE 2
 X <- matrix(rchisq(500, 3), 50, 10)
 Y <- rbinom(50)
 lambda_seq <- runif(100, 1, 2)
