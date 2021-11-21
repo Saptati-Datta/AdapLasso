@@ -492,7 +492,11 @@ cv.gamma <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma_seq = NULL, n
   gamma_min_ind <- which(cvm == min(cvm), arr.ind = T)[1]
   #Finds the gamma which minimizes the cross-validation error
   gamma_min <- gamma_seq[gamma_min_ind]
+  #Finds the column corresponding to the minimum entry of the matrix
+  lambda_min_ind <- which(cvm == min(cvm), arr.ind = T)[2]
+  #Finds the gamma which minimizes the cross-validation error
+  lambda_min <- lambda_seq[lambda_min_ind]
 
   # Return
-  return(list(cvm = cvm, gamma_min = gamma_min))
+  return(list(cvm = cvm, gamma_min = gamma_min,lambda))
 }
