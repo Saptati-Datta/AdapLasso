@@ -480,7 +480,8 @@ cv.gamma <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma_seq = NULL, n
     gamma_seq <- seq(0.0001, 10, by = 0.1)
     n_gamma <- length(gamma_seq)
   }
-
+ fit_cv <- cvLASSO(X, Y, lambda_seq , n_lambda , gamma , k , fold_ids , eps)
+ lambda_seq <- fit_cv$lambda_seq
   # defining a cross-validation matrix
   cvm <- matrix(NA, n_gamma, n_lambda)
 
@@ -498,5 +499,5 @@ cv.gamma <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma_seq = NULL, n
   lambda_min <- lambda_seq[lambda_min_ind]
 
   # Return
-  return(list(cvm = cvm, gamma_min = gamma_min,lambda))
+  return(list(cvm = cvm, gamma_min = gamma_min,lambda_min = lambda_min))
 }
