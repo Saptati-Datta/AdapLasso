@@ -24,13 +24,14 @@
 #' weights <- sc$weights
 scale_X <- function(X, Y, gamma) {
   glmnet::cv.glmnet(X, Y, alpha = 0)
+  Matrix::rankMatrix(X)
   # Computing the best lambda for the Ridge estimator
-  cv_mod <- cv.glmnet(X, Y, alpha = 0)
+  cv_mod <- glmnet::cv.glmnet(X, Y, alpha = 0)
   # Optimal value of lambda for Ridge
-  lambda_min <- cv_mod$lambda.min
+  lambda_min <- glmnet::cv_mod$lambda.min
   p <- ncol(X)
   n <- nrow(X)
-  if (rankMatrix(X) < p) {
+  if (Matrix::rankMatrix(X) < p) {
     # Calculating ridge estimator
     beta <- solve(crossprod(X) + lambda_min * diag(p)) %*% crossprod(X, Y)
   } else {
@@ -95,7 +96,7 @@ standardizeXY <- function(X, Y, gamma) {
 # Soft-thresholding of a scalar a at level lambda
 # a- scalar input
 # lambda-tuning parameter
-#' Title
+#' Title Soft-thresholding of a scalar a at level lambda
 #'
 #' @param a scalar to be soft-thresholded
 #' @param lambda level of soft thresholding
