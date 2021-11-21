@@ -169,7 +169,48 @@ pre code {
 
 
 <p><font size="6"> <strong>INTENDED FUNCTIONALITY</strong><br />
-<font size="2"> This package consists of the necessary functions to fit an Adaptive Lasso to a data. There exists certain scenarios where ordinary Lasso turns out to be inconsistent. The main reason for such a discrepancy is that Lasso does not always enjoy oracle properties. In such a case, it is convenient to take resort to Adaptive Lasso technique which satisfies the oracle properties, that is, it has the ability to perform the same asymptotically, as if we knew the true specification of the model beforehand. Such an algorithm was proposed by Zou(2006). This package consists of 9 functions: scale_X,standardizeXY,soft,lasso,fitadapLASSOstandardized,fitadapLASSOstandardized_seq,fitadapLASSO,cvLASSO and cv.gamma.The functionality of each of these functions have been documented and they together help fit an adaptive lasso model using LARS algorithm.</p>
+<font size="2"> This package consists of the necessary functions to fit an Adaptive Lasso to a data. There exists certain scenarios where ordinary Lasso turns out to be inconsistent. The main reason for such a discrepancy is that Lasso does not always enjoy oracle properties. In such a case, it is convenient to take resort to Adaptive Lasso technique which satisfies the oracle properties, that is, it has the ability to perform the same asymptotically, as if we knew the true specification of the model beforehand. Such an algorithm was proposed by Zou(2006). This package consists of 9 functions: scale_X,standardizeXY,soft,lasso,fitadapLASSOstandardized,fitadapLASSOstandardized_seq,fitadapLASSO,cvLASSO and cv.gamma.The functionality of each of these functions have been documented and they together help fit an adaptive lasso model using LARS algorithm.\</p>
+<p><font size="6"> <strong>Installation Instructions</strong> <font size="2"> The package can be installed using the following two lines of code.</p>
+<pre class="r"><code>devtools::install_github(&quot;Saptati-Datta/AdapLasso&quot;,build_vignettes=TRUE)</code></pre>
+<pre><code>## Downloading GitHub repo Saptati-Datta/AdapLasso@HEAD</code></pre>
+<pre><code>## 
+##   
+  
+  
+   checking for file &#39;C:\Users\sapta\AppData\Local\Temp\RtmpIt56To\remotes3fa037962ccd\Saptati-Datta-AdapLasso-d0d0670/DESCRIPTION&#39; ...
+  
+v  checking for file &#39;C:\Users\sapta\AppData\Local\Temp\RtmpIt56To\remotes3fa037962ccd\Saptati-Datta-AdapLasso-d0d0670/DESCRIPTION&#39; (835ms)
+## 
+  
+-  preparing &#39;AdapLasso&#39;:
+##    checking DESCRIPTION meta-information ...
+  
+   checking DESCRIPTION meta-information ... 
+  
+v  checking DESCRIPTION meta-information
+## 
+  
+  
+  
+-  checking for LF line-endings in source and make files and shell scripts (353ms)
+## 
+  
+-  checking for empty or unneeded directories
+## 
+  
+   Omitted &#39;LazyData&#39; from DESCRIPTION
+## 
+  
+  
+  
+-  building &#39;AdapLasso_0.0.0.9000.tar.gz&#39;
+## 
+  
+   
+## </code></pre>
+<pre><code>## Installing package into &#39;C:/Users/sapta/OneDrive/Documents/R/win-library/4.1&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
+<pre class="r"><code>library(AdapLasso)</code></pre>
 
 
 
