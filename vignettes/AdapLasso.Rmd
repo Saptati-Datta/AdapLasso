@@ -1,0 +1,24 @@
+---
+title: "Adaptive Lasso using LARS algorithm"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adaptive Lasso using LARS algorithm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Lasso is one of the most popular techniques to fit linear regression by using a penalty which sets some of the coefficients to be zero, thereby facilitating variable selection and simultaneous estimation.However, there exists certain scenarios where ordinary Lasso turns out to be inconsistent. The main reason for such a discrepancy is that Lasso does not always enjoy oracle properties. In such a case, it is convenient to take resort to Adaptive Lasso technique which satisfies the oracle properties, that is, it has the ability to perform the same asymptotically, as if we knew the true specification of the model beforehand. Such an algorithm was proposed by[Zou(2006)]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735).Suppose \pmb{$\hat{\beta}$} is a root-n consistent estimator of \pmb{$\beta^*$} (the initial estimate could be the OLS estimator or the estimate obtained by fitting Ridge regression). By picking a $\gamma >0$, we define a weight vector \textbf{w} by \pmb{$\hat{w}$}$=\frac{1}{|\pmb{\hat{\beta}|}^\gamma}$.Then the adaptive lasso estimate is given by $$\pmb{\hat\beta^*(n)}=\arg\min_{\pmb{\beta}} ||y-\sum_{j=1}^p x_{j}\beta_{j}||^2 + \lambda_n \sum_{j=1}^{p} \hat{w_j}|\beta_j| ,$$\
+where the tuning parameter $\lambda_n$ varies with n.\
+The package can be loaded using the following command.
+```{r setup}
+library(AdapLasso)
+```
+
+Here we will discuss the uses of several functions in this package using mtcars dataset.
