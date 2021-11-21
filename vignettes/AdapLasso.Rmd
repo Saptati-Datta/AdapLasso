@@ -22,7 +22,7 @@ devtools::install_github("Saptati-Datta/AdapLasso")
 library(AdapLasso)
 ```
 
-Here we will discuss the uses of several functions in this package using "swiss" dataset.It is an inbuilt dataset in R which consists of information regarding standardized fertility measure and socio-economic indicators for each of 47 French-speaking provinces of Switzerland at about 1888.The daa frame has 47 observations on 6 variables, each of which is in perncent,i.e., in [0, 100].
+Here we will discuss the uses of several functions in this package using "swiss" dataset.It is an inbuilt dataset in R which consists of information regarding standardized fertility measure and socio-economic indicators for each of 47 French-speaking provinces of Switzerland at about 1888.The daa frame has 47 observations on 6 variables, each of which is in perncent,i.e., in [0, 100].The variable "Catholic" was scaled to [0, 1].
 Here, we take fertility measure as our response variable and socio-economic indicators, namely, "Agriculture", "Education", "Catholic", "Infant Mortality" as our independent variables.
 
 Loading the data:
@@ -60,5 +60,11 @@ In order to find the optimal $\gamma$ value, we can perform another cross-valida
 fit_gamma <- cv.gamma(X, Y)
 #Finding the minimum gamma
 gamma <- fit_gamma$gamma_min
+#Finding the minimum lambda
+lambda <- fit_gamma$lambda_min
 ```
+
+
+```lambda``` and ```gamma``` as obtained from above gives the desired optimal pair.
+
 
