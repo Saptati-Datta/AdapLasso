@@ -47,4 +47,11 @@ beta0 <- fit$beta0_vec
 betamat <- fit$beta_mat
 ```
 
-However, the most important task that remains is to find the pair $(\lambda, \gamma)$ which minimizes the cross-validation error.
+However, the most important task that remains is to find the pair $(\lambda, \gamma)$ which minimizes the cross-validation error.If we use $\hat {\beta_{ols}}$ to find the adaptive weights,we would want to find an optimal pair of $(\lambda_n,\gamma)$.In such a case, we use two-dimensional cross-validation(as suggested by Zou)to tune the adaptive lasso.For a given $\gamma$ we can use cross-validation along with the LARS algorithm to exclusively search for the optimal $\lambda_n$.We use the function "cvLASSO" to find such a $\lambda_n$ and the particular value of $\lambda$ for which the cross-validation is minimum, given a default $\gamma$, as follows:
+```{r}
+fit_cv <- cvLASSO(X, Y)
+#Finding the optimal lambda_seq
+lambda_opt_vec <- fit_cv$lambda_seq
+#Finding the desired value of lambda 
+lambda.min <- fit_cv$lambda_min
+```
