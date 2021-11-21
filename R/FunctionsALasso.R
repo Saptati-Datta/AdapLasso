@@ -23,6 +23,7 @@
 #' #Deriving weights
 #' weights <- sc$weights
 scale_X <- function(X, Y, gamma) {
+  glmnet::cv.glmnet(X, Y, alpha = 0)
   # Computing the best lambda for the Ridge estimator
   cv_mod <- cv.glmnet(X, Y, alpha = 0)
   # Optimal value of lambda for Ridge
