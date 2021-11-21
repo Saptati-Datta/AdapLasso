@@ -16,9 +16,35 @@ knitr::opts_chunk$set(
 
 Lasso is one of the most popular techniques to fit linear regression by using a penalty which sets some of the coefficients to be zero, thereby facilitating variable selection and simultaneous estimation.However, there exists certain scenarios where ordinary Lasso turns out to be inconsistent. The main reason for such a discrepancy is that Lasso does not always enjoy oracle properties. In such a case, it is convenient to take resort to Adaptive Lasso technique which satisfies the oracle properties, that is, it has the ability to perform the same asymptotically, as if we knew the true specification of the model beforehand. Such an algorithm was proposed by[Zou(2006)]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735).Suppose \pmb{$\hat{\beta}$} is a root-n consistent estimator of \pmb{$\beta^*$} (the initial estimate could be the OLS estimator or the estimate obtained by fitting Ridge regression). By picking a $\gamma >0$, we define a weight vector \textbf{w} by \pmb{$\hat{w}$}$=\frac{1}{|\pmb{\hat{\beta}|}^\gamma}$.Then the adaptive lasso estimate is given by $$\pmb{\hat\beta^*(n)}=\arg\min_{\pmb{\beta}} ||y-\sum_{j=1}^p x_{j}\beta_{j}||^2 + \lambda_n \sum_{j=1}^{p} \hat{w_j}|\beta_j| ,$$\
 where the tuning parameter $\lambda_n$ varies with n.\
-The package can be loaded using the following command.
+The package can be installed and loaded using the following command.
 ```{r setup}
+devtools::install_github("Saptati-Datta/AdapLasso")
 library(AdapLasso)
 ```
 
-Here we will discuss the uses of several functions in this package using mtcars dataset.
+Here we will discuss the uses of several functions in this package using "swiss" dataset.It is an inbuilt dataset in R which consists of information regarding standardized fertility measure and socio-economic indicators for each of 47 French-speaking provinces of Switzerland at about 1888.The daa frame has 47 observations on 6 variables, each of which is in perncent,i.e., in [0, 100].
+Here, we take fertility measure as our response variable and socio-economic indicators, namely, "Agriculture", "Education", "Catholic", "Infant Mortality" as our independent variables.
+
+Loading the data:
+```{r}
+data <- swiss
+#Defining the variables
+#Matrix of Covariates
+X <- as.matrix(cbind(data$Agriculture,data$Education,data$Catholic,data$Infant.Mortality))
+#Response vector
+Y <- data$Fertility
+```
+
+We can fit an adaptive lasso based on the given data in the following way:
+```{r}
+fit <- fitadapLASSO(X, Y)##All other parameters are free to take default values
+##Deriving the accurate lambda sequence
+lambda_vec <- fit$lambda_seq
+##Estimated intercept
+beta0 <- fit$beta0_vec
+##Matrix of estimated parameters 
+#Each column corresponding to a particular lambda
+betamat <- fit$beta_mat
+```
+
+However, the most important task that remains is to find the pair $(\lambda, \gamma)$ which minimizes the cross-validation error.
