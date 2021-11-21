@@ -67,4 +67,6 @@ lambda <- fit_gamma$lambda_min
 
 ```lambda``` and ```gamma``` as obtained from above gives the desired optimal pair.
 
+<font size = "4"> **References**
+<font size = "2"> [Hui Zou: The Adaptive Lasso and Its Oracle Properties]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735)
 
