@@ -11,11 +11,11 @@ devtools::install_github("Saptati-Datta/AdapLasso",build_vignettes=TRUE)
 library(AdapLasso)
 
 ```
-<font size = "6"> **Remaining Part of the Project**\
-<font size = "2"> Part of the project that is still to be completed :\
+<font size = "6"> **Remaining Part of the Project**
+<font size = "2"> Part of the project that is still to be completed :
 
-* The vignette is partially complete as of yet.References to be added.\
+* The vignette is partially complete as of yet.References to be added.
 
-* If time permits,I will also try to make tests.\
+* If time permits,I will also try to make tests.
 
 * Changes in parts of documentation and adding more examples
