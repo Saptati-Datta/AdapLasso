@@ -18,4 +18,6 @@ library(AdapLasso)
 
 * If time permits,I will also try to make tests.
 
-* Changes in parts of documentation and adding more examples
+* Changes in parts of documentation and adding more examples.
+
+* Changes to be made in the last function.
