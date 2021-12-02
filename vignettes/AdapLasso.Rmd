@@ -40,6 +40,9 @@ We can fit an adaptive lasso based on the given data in the following way:
 fit <- fitadapLASSO(X, Y)##All other parameters are free to take default values
 ##Deriving the accurate lambda sequence
 lambda_vec <- fit$lambda_seq
+##Plotting the lambda sequence
+plot(fit$lambda_seq, colSums(fit$beta_mat != 0), ylab = "Non-zero beta", xlab = "Lambda_seq")
+lines(fit$lambda_seq, colSums(fit$beta_mat != 0))
 ##Estimated intercept
 beta0 <- fit$beta0_vec
 ##Matrix of estimated parameters 
@@ -60,13 +63,15 @@ In order to find the optimal $\gamma$ value, we can perform another cross-valida
 fit_gamma <- cv.gamma(X, Y)
 #Finding the minimum gamma
 gamma <- fit_gamma$gamma_min
+gamma
 #Finding the minimum lambda
 lambda <- fit_gamma$lambda_min
+lambda
 ```
 
 
-```lambda``` and ```gamma``` as obtained from above gives the desired optimal pair.
+```lambda``` and ```gamma``` as obtained from above gives the desired optimal pair.\
 
-<font size = "4"> **References**
+<font size = "4"> **References**\
 <font size = "2"> [Hui Zou: The Adaptive Lasso and Its Oracle Properties]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735)
 
