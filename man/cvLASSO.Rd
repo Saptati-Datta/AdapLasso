@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{cvLASSO}
 \alias{cvLASSO}
-\title{Title Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value}
+\title{Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value}
 \usage{
 cvLASSO(
   X,
@@ -16,15 +16,15 @@ cvLASSO(
 )
 }
 \arguments{
-\item{X}{n x p matrix of covariates}
+\item{X}{n x p  design matrix of inputs}
 
-\item{Y}{n x 1 response vector}
+\item{Y}{n x 1 vector of outputs}
 
 \item{lambda_seq}{(optional)sequence of tuning parameters}
 
 \item{n_lambda}{length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user}
 
-\item{gamma}{scalar used in the weight vector(default value 0.01)}
+\item{gamma}{a scalar(>0) input used in the weight(user input)}
 
 \item{k}{number of folds for k-fold cross-validation, default is 5}
 
@@ -36,7 +36,7 @@ cvLASSO(
 lambda_seq - the actual sequence of tuning parameters used, beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale),fold_ids - used splitting into folds from 1 to k (either as supplied or as generated in the beginning),lambda_min - selected lambda based on minimal rule,lambda_1se - selected lambda based on 1SE rule, cvm - values of CV(lambda) for each lambda,cvm - values of CV(lambda) for each lambda, cvse - values of SE_CV(lambda) for each lambda
 }
 \description{
-Title Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value
+Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value
 }
 \examples{
 X <- matrix(rnorm(500), 50, 10)

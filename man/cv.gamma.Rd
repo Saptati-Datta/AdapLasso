@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{cv.gamma}
 \alias{cv.gamma}
-\title{Title Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas}
+\title{Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas}
 \usage{
 cv.gamma(
   X,
@@ -17,9 +17,9 @@ cv.gamma(
 )
 }
 \arguments{
-\item{X}{n x p matrix of covariates}
+\item{X}{n x p  design matrix of inputs}
 
-\item{Y}{n x 1 response vector}
+\item{Y}{n x 1 vector of outputs}
 
 \item{lambda_seq}{(optional)sequence of tuning parameters}
 
@@ -39,7 +39,7 @@ cv.gamma(
 cvm = a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma), gamma_min = optimal gamma
 }
 \description{
-Title Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
+Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
 }
 \examples{
 X <- matrix(rnorm(500), 50, 10)

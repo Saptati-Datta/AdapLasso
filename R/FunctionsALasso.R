@@ -348,15 +348,10 @@ fitadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, e
 
 
 #' Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value
-#'
-#' @param X n x p matrix of covariates
-#' @param Y n x 1 response vector
-#' @param lambda_seq (optional)sequence of tuning parameters
-#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
-#' @param gamma scalar used in the weight vector(default value 0.01)
+#' @inheritParams fitadapLASSO
 #' @param k  number of folds for k-fold cross-validation, default is 5
 #' @param fold_ids (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
-#' @param eps precision level for convergence assessment, default 0.001
+#'
 #'
 #' @return lambda_seq - the actual sequence of tuning parameters used, beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale),fold_ids - used splitting into folds from 1 to k (either as supplied or as generated in the beginning),lambda_min - selected lambda based on minimal rule,lambda_1se - selected lambda based on 1SE rule, cvm - values of CV(lambda) for each lambda,cvm - values of CV(lambda) for each lambda, cvse - values of SE_CV(lambda) for each lambda
 #' @export cvLASSO
@@ -429,17 +424,10 @@ cvLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5,
 }
 # Cross-Validation to choose gamma from a sequence of gamma values
 #' Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
-#'
-#' @param X n x p matrix of covariates
-#' @param Y n x 1 response vector
-#' @param lambda_seq (optional)sequence of tuning parameters
-#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
+#'@inheritParams cvLASSO
 #' @param gamma_seq (optional)sequence of gamma values(used in determining weights)
 #' @param n_gamma length of the desired sequence of gamma values
-#' @param k number of folds for k-fold cross-validation, default is 5
-#' @param fold_ids (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
-#' @param eps precision level for convergence assessment, default 0.001
-#'
+
 #' @return  cvm = a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma), gamma_min = optimal gamma
 #' @export cv.gamma
 #'
