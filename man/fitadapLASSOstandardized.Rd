@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{fitadapLASSOstandardized}
 \alias{fitadapLASSOstandardized}
-\title{Title}
+\title{Fits adaptive lasso based on standardized data}
 \usage{
 fitadapLASSOstandardized(
   Xtilde,
@@ -13,11 +13,11 @@ fitadapLASSOstandardized(
 )
 }
 \arguments{
-\item{Xtilde}{n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm}
+\item{Xtilde}{n x p design matrix X scaled according to LARS algorithm and centered to mean 0}
 
-\item{Ytilde}{n x 1 vector of centered outputs}
+\item{Ytilde}{n x 1 centered output vector}
 
-\item{lambda}{tuning parameter}
+\item{lambda}{tuning parameter(scalar)}
 
 \item{beta_start}{p x 1, optional starting point for coordinate descent algorithm}
 
@@ -27,7 +27,7 @@ fitadapLASSOstandardized(
 beta = vector of parameters , fmin = optimal value of the objective function
 }
 \description{
-Title
+Fits adaptive lasso based on standardized data
 }
 \examples{
 X <- matrix(rnorm(500), 50, 10)
