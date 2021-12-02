@@ -2,22 +2,22 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{standardizeXY}
 \alias{standardizeXY}
-\title{Title Standardizes the input design matrix X and output vector Y to mean 0 and scales X}
+\title{Standardizes the input design matrix X and output vector Y to mean 0 and scales X}
 \usage{
 standardizeXY(X, Y, gamma)
 }
 \arguments{
-\item{X}{n x p design matrix of inputs}
+\item{X}{n x p  design matrix of inputs}
 
-\item{Y}{n x 1 output vector}
+\item{Y}{n x 1 vector of outputs}
 
-\item{gamma}{a scalar (>0) input(user-defined) used in the weights}
+\item{gamma}{a scalar(>0) input used in the weight(user input)}
 }
 \value{
 Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w which is obtained from scale X
 }
 \description{
-Title Standardizes the input design matrix X and output vector Y to mean 0 and scales X
+Standardizes the input design matrix X and output vector Y to mean 0 and scales X
 }
 \examples{
 X <- matrix(rnorm(500), 50, 10)
