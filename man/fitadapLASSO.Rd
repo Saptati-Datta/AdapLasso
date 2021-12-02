@@ -2,20 +2,20 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{fitadapLASSO}
 \alias{fitadapLASSO}
-\title{Title Fits adaptive LASSO}
+\title{Fits adaptive LASSO}
 \usage{
 fitadapLASSO(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, eps = 0.001)
 }
 \arguments{
-\item{X}{n x p matrix of covariates}
+\item{X}{n x p  design matrix of inputs}
 
-\item{Y}{n x 1 response vector}
+\item{Y}{n x 1 vector of outputs}
 
 \item{lambda_seq}{(optional)sequence of tuning parameters}
 
-\item{n_lambda}{length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user(default 60)}
+\item{n_lambda}{length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user}
 
-\item{gamma}{scalar used in the weight vector(default value 0.01)}
+\item{gamma}{a scalar(>0) input used in the weight(user input)}
 
 \item{eps}{precision level for convergence assessment, default 0.001}
 }
@@ -23,7 +23,7 @@ fitadapLASSO(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, eps = 0.001)
 lambda_seq = the actual sequence of tuning parameters used,beta_mat = p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec = length(lambda_seq) vector of intercepts (original data without center or scale)
 }
 \description{
-Title Fits adaptive LASSO
+Fits adaptive LASSO
 }
 \examples{
 #EXAMPLE 1
