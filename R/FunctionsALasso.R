@@ -48,10 +48,7 @@ scale_X <- function(X, Y, gamma) {
 
 # STANDARDIZING INPUTS
 #' Standardizes the input design matrix X and output vector Y to mean 0 and scales X
-#'
-#' @param X n x p design matrix of inputs
-#' @param Y n x 1 output vector
-#' @param gamma a scalar (>0) input(user-defined) used in the weights
+#'@inheritParams scale_X
 #'
 #' @return Xtilde=scaled X, Ytilde= scaled Y, Ymeans = mean of Y , Xmeans =  Column means after centering the weighted X matrix from scale_X , weights = weights obtained by centering X_w which is obtained from scale X
 #' @export standardizeXY
@@ -163,10 +160,7 @@ lasso <- function(Xtilde, Ytilde, beta, lambda) {
 # beta_start - p vector, an optional starting point for coordinate-descent algorithm
 # eps - precision level for convergence assessment, default 0.001
 #' Fits adaptive lasso based on standardized data
-#'
-#' @param Xtilde n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm
-#' @param Ytilde n x 1 vector of centered outputs
-#' @param lambda tuning parameter
+#'@inheritParams lasso
 #' @param beta_start p x 1, optional starting point for coordinate descent algorithm
 #' @param eps  precision level for convergence assessment, default 0.001
 #'
@@ -236,12 +230,9 @@ fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, 
 # n_lambda - length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
 # eps - precision level for convergence assessment, default 0.001
 #' Fits Adaptive Lasso on a sequence of lambda values based on standardized data
-#'
-#' @param Xtilde n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm
-#' @param Ytilde n x 1 vector of centered outputs
+#'@inheritParams fitadapLASSOstandardized
 #' @param lambda_seq (optional)sequence of tuning parameters
 #' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
-#' @param eps precision level for convergence assessment, default 0.001
 #'
 #' @return lambda_seq=the actual sequence of tuning parameters used,beta_mat=p x length(lambda_seq) matrix of corresponding solutions at each lambda value,fmin_vec = fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
 #' @export fitadapLASSOstandardized_seq
@@ -312,14 +303,8 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
 
 
 #'  Fits adaptive LASSO
-#'
-#' @param X n x p matrix of covariates
-#' @param Y n x 1 response vector
-#' @param lambda_seq (optional)sequence of tuning parameters
-#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user(default 60)
-#' @param gamma scalar used in the weight vector(default value 0.01)
-#' @param eps precision level for convergence assessment, default 0.001
-#'
+#'@inheritParams scale_X
+#'@inheritParams fitadapLASSOstandardized_seq
 #' @return lambda_seq = the actual sequence of tuning parameters used,beta_mat = p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec = length(lambda_seq) vector of intercepts (original data without center or scale)
 #' @export fitadapLASSO
 #'
