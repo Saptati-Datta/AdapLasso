@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{lasso}
 \alias{lasso}
-\title{Title Function for soft-thresholding}
+\title{Function for soft-thresholding}
 \usage{
 lasso(Xtilde, Ytilde, beta, lambda)
 }
@@ -19,7 +19,7 @@ lasso(Xtilde, Ytilde, beta, lambda)
 Objective function for Lasso
 }
 \description{
-Title Function for soft-thresholding
+Function for soft-thresholding
 }
 \examples{
 X <- matrix(rnorm(500), 50, 10)
