@@ -2,7 +2,7 @@
 
 # Transforming X by dividing with elements of the weight matrix
 # Computing scaled inputs using LARS algorithm
-#' Title: scale_X Scales a matrix of inputs according to  LARS algorithm
+#'  scale_X Scales a matrix of inputs according to  LARS algorithm
 #'
 #' @param X n x p  design matrix of inputs
 #' @param Y n x 1 vector of outputs
@@ -47,7 +47,7 @@ scale_X <- function(X, Y, gamma) {
 
 
 # STANDARDIZING INPUTS
-#' Title Standardizes the input design matrix X and output vector Y to mean 0 and scales X
+#' Standardizes the input design matrix X and output vector Y to mean 0 and scales X
 #'
 #' @param X n x p design matrix of inputs
 #' @param Y n x 1 output vector
@@ -96,7 +96,7 @@ standardizeXY <- function(X, Y, gamma) {
 # Soft-thresholding of a scalar a at level lambda
 # a- scalar input
 # lambda-tuning parameter
-#' Title Soft-thresholding of a scalar a at level lambda
+#' Soft-thresholding of a scalar a at level lambda
 #'
 #' @param a scalar to be soft-thresholded
 #' @param lambda level of soft thresholding
@@ -122,7 +122,7 @@ soft <- function(a, lambda) {
 # lamdba - tuning parameter
 # beta - value of beta at which to evaluate the function
 # Computing the objective function
-#' Title Function for soft-thresholding
+#'  Function for soft-thresholding
 #'
 #' @param Xtilde n x p design matrix X scaled according to LARS algorithm and centered to mean 0
 #' @param Ytilde n x 1 centered output vector
@@ -162,7 +162,7 @@ lasso <- function(Xtilde, Ytilde, beta, lambda) {
 # lamdba - tuning parameter
 # beta_start - p vector, an optional starting point for coordinate-descent algorithm
 # eps - precision level for convergence assessment, default 0.001
-#' Title
+#' Fits adaptive lasso based on standardized data
 #'
 #' @param Xtilde n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm
 #' @param Ytilde n x 1 vector of centered outputs
@@ -235,7 +235,7 @@ fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, 
 # lamdba_seq - sequence of tuning parameters, optional
 # n_lambda - length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
 # eps - precision level for convergence assessment, default 0.001
-#' Title fits Adaptive Lasso on a sequence of lambda values based on standardized data
+#' Fits Adaptive Lasso on a sequence of lambda values based on standardized data
 #'
 #' @param Xtilde n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm
 #' @param Ytilde n x 1 vector of centered outputs
@@ -311,7 +311,7 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
 # eps - precision level for convergence assessment, default 0.001
 
 
-#' Title Fits adaptive LASSO
+#'  Fits adaptive LASSO
 #'
 #' @param X n x p matrix of covariates
 #' @param Y n x 1 response vector
@@ -362,7 +362,7 @@ fitadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, e
 
 
 
-#' Title Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value
+#' Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value
 #'
 #' @param X n x p matrix of covariates
 #' @param Y n x 1 response vector
@@ -443,7 +443,7 @@ cvLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5,
   return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec, fold_ids = fold_ids, lambda_min = lambda_min, lambda_1se = lambda_1se, cvm = cvm, cvse = cvse))
 }
 # Cross-Validation to choose gamma from a sequence of gamma values
-#' Title Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
+#' Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
 #'
 #' @param X n x p matrix of covariates
 #' @param Y n x 1 response vector
