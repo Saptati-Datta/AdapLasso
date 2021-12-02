@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{scale_X}
 \alias{scale_X}
-\title{Title: scale_X Scales a matrix of inputs according to  LARS algorithm}
+\title{scale_X Scales a matrix of inputs according to  LARS algorithm}
 \usage{
 scale_X(X, Y, gamma)
 }
@@ -17,7 +17,7 @@ scale_X(X, Y, gamma)
 X_w(the scaled design matrix),weights
 }
 \description{
-Title: scale_X Scales a matrix of inputs according to  LARS algorithm
+scale_X Scales a matrix of inputs according to  LARS algorithm
 }
 \examples{
 EXAMPLE
