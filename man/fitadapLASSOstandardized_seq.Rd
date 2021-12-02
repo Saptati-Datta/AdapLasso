@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{fitadapLASSOstandardized_seq}
 \alias{fitadapLASSOstandardized_seq}
-\title{Title fits Adaptive Lasso on a sequence of lambda values based on standardized data}
+\title{Fits Adaptive Lasso on a sequence of lambda values based on standardized data}
 \usage{
 fitadapLASSOstandardized_seq(
   Xtilde,
@@ -13,9 +13,9 @@ fitadapLASSOstandardized_seq(
 )
 }
 \arguments{
-\item{Xtilde}{n x p matrix, centered and scaled X where X has been scaled as mentioned in LARS algorithm}
+\item{Xtilde}{n x p design matrix X scaled according to LARS algorithm and centered to mean 0}
 
-\item{Ytilde}{n x 1 vector of centered outputs}
+\item{Ytilde}{n x 1 centered output vector}
 
 \item{lambda_seq}{(optional)sequence of tuning parameters}
 
@@ -27,7 +27,7 @@ fitadapLASSOstandardized_seq(
 lambda_seq=the actual sequence of tuning parameters used,beta_mat=p x length(lambda_seq) matrix of corresponding solutions at each lambda value,fmin_vec = fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
 }
 \description{
-Title fits Adaptive Lasso on a sequence of lambda values based on standardized data
+Fits Adaptive Lasso on a sequence of lambda values based on standardized data
 }
 \examples{
 X <- matrix(rnorm(500), 50, 10)
