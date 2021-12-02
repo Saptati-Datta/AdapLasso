@@ -2,7 +2,7 @@
 % Please edit documentation in R/FunctionsALasso.R
 \name{soft}
 \alias{soft}
-\title{Title}
+\title{Soft-thresholding of a scalar a at level lambda}
 \usage{
 soft(a, lambda)
 }
@@ -15,7 +15,7 @@ soft(a, lambda)
 soft-thresholded value
 }
 \description{
-Title
+Soft-thresholding of a scalar a at level lambda
 }
 \examples{
 a = 2
