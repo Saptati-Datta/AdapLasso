@@ -14,7 +14,9 @@ scale_X(X, Y, gamma)
 \item{gamma}{a scalar(>0) input used in the weight(user input)}
 }
 \value{
-X_w(the scaled design matrix),weights
+A list with the elements
+\item{X_w}{A n x p matrix scaled according to LARS algorithm}
+\item{weights}{adaptive weights}
 }
 \description{
 scale_X Scales a matrix of inputs according to  LARS algorithm

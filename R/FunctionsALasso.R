@@ -8,7 +8,9 @@
 #' @param Y n x 1 vector of outputs
 #' @param gamma a scalar(>0) input used in the weight(user input)
 #'
-#' @return X_w(the scaled design matrix),weights
+#' @return A list with the elements
+#' \item{X_w}{A n x p matrix scaled according to LARS algorithm}
+#' \item{weights}{adaptive weights}
 #' @export scale_X
 #'
 #' @examples
