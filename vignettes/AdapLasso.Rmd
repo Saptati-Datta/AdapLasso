@@ -34,7 +34,7 @@ X <- as.matrix(cbind(data$Agriculture,data$Education,data$Catholic,data$Infant.M
 #Response vector
 Y <- data$Fertility
 ```
-
+The function ```fitadapLASSO``` fits adaptive lasso to a given data.
 We can fit an adaptive lasso based on the given data in the following way:
 ```{r}
 fit <- fitadapLASSO(X, Y)##All other parameters are free to take default values
@@ -58,7 +58,8 @@ lambda_opt_vec <- fit_cv$lambda_seq
 #Finding the desired value of lambda 
 lambda.min <- fit_cv$lambda_min
 ```
-In order to find the optimal $\gamma$ value, we can perform another cross-validation using the ```cv.gamma``` function. We find the pair of  ($\lambda,\gamma$) corresponding to which the entry in the ```cvm``` matrix is minimum.
+Tuning is very important in practice. Suppose we use the ordinary OLS estimator of \beta,$\hat \beta_{ols}$ to construct the adaptive weights.We then want to find the optimal pair of $(\gamma,\lambda_n)$.We use two dimensional cross-validation to tune the adaptive lasso.According to Zou, we can also replace $\hat\beta_{ols}$ with other consistent estimators.Hence, it can be treated as a third tuning parameters and we can perform three-dimensional cross-validation to find an optimal triple $(\hat\beta,\gamma,\lambda_n)$.\\
+Here,in order to find the optimal $\gamma$ value, we can perform another cross-validation using the ```cv.gamma``` function. We find the pair of  ($\lambda,\gamma$) corresponding to which the entry in the ```cvm``` matrix is minimum.
 ```{r}
 fit_gamma <- cv.gamma(X, Y)
 #Finding the minimum gamma
@@ -70,8 +71,13 @@ lambda
 ```
 
 
-```lambda``` and ```gamma``` as obtained from above gives the desired optimal pair.\
-
+```lambda``` and ```gamma``` as obtained from above gives the desired optimal pair.\\
+Usually, it is suggested to use $\hat\beta_ols$ for the adaptive weights unless collinearity is a concern. Otherwise, it is preferable to use the ridge estimator.In this package, the function ```scale_X``` combines both these conditions. It takes the OLS estimator if X has full rank and the ridge estimator if collinearity is detected to accout for the adaptive weights.In order to scale X according to LARS algorithm, we can use the following function:
+```{r}
+gamma <- 1
+scale_X(X, Y, gamma)
+```
+Note that, for the purpose of fitting adaptive lasso using functions like ```fitadapLASSO``,```cvLASSO```,```cv.gamma``` one do not need to scale the inputs as the functions have been built in a way such that they scale the user inputs.\
 <font size = "4"> **References**\
 <font size = "2"> [Hui Zou: The Adaptive Lasso and Its Oracle Properties]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735)
 
