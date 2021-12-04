@@ -50,9 +50,9 @@ beta0 <- fit$beta0_vec
 betamat <- fit$beta_mat
 ```
 
-However, the most important task that remains is to find the pair $(\lambda, \gamma)$ which minimizes the cross-validation error.If we use $\hat {\beta_{ols}}$ to find the adaptive weights,we would want to find an optimal pair of $(\lambda_n,\gamma)$.In such a case, we use two-dimensional cross-validation(as suggested by Zou)to tune the adaptive lasso.For a given $\gamma$ we can use cross-validation along with the LARS algorithm to exclusively search for the optimal $\lambda_n$.We use the function ```cvLASSO``` to find such a $\lambda_n$ and the particular value of $\lambda$ for which the cross-validation is minimum, given a default $\gamma$, as follows:
+However, the most important task that remains is to find the pair $(\lambda, \gamma)$ which minimizes the cross-validation error.If we use $\hat {\beta_{ols}}$ to find the adaptive weights,we would want to find an optimal pair of $(\lambda_n,\gamma)$.In such a case, we use two-dimensional cross-validation(as suggested by Zou)to tune the adaptive lasso.For a given $\gamma$ we can use cross-validation along with the LARS algorithm to exclusively search for the optimal $\lambda_n$.We use the function ```cvadapLASSO``` to find such a $\lambda_n$ and the particular value of $\lambda$ for which the cross-validation is minimum, given a default $\gamma$, as follows:
 ```{r}
-fit_cv <- cvLASSO(X, Y)
+fit_cv <- cvadapLASSO(X, Y)
 #Finding the optimal lambda_seq
 lambda_opt_vec <- fit_cv$lambda_seq
 #Finding the desired value of lambda 
@@ -77,7 +77,7 @@ Usually, it is suggested to use $\hat\beta_ols$ for the adaptive weights unless 
 gamma <- 1
 scale_X(X, Y, gamma)
 ```
-Note that, for the purpose of fitting adaptive lasso using functions like ```fitadapLASSO``,```cvLASSO```,```cv.gamma``` one do not need to scale the inputs as the functions have been built in a way such that they scale the user inputs.\
+Note that, for the purpose of fitting adaptive lasso using functions like ```fitadapLASSO``,```cvadapLASSO```,```cv.gamma``` one do not need to scale the inputs as the functions have been built in a way such that they scale the user inputs.\
 <font size = "4"> **References**\
 <font size = "2"> [Hui Zou: The Adaptive Lasso and Its Oracle Properties]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735)
 
