@@ -36,7 +36,9 @@ cv.gamma(
 \item{eps}{precision level for convergence assessment, default 0.001}
 }
 \value{
-cvm = a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma), gamma_min = optimal gamma
+\item{cvm}{a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma)}
+\item{gamma_min}{optimal gamma}
+\item{lambda_min}{selected lambda based on minimal rule}
 }
 \description{
 Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas

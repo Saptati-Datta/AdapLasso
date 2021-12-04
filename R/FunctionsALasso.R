@@ -368,14 +368,22 @@ fitadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, e
 #' @param fold_ids (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
 #'
 #'
-#' @return lambda_seq - the actual sequence of tuning parameters used, beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale),fold_ids - used splitting into folds from 1 to k (either as supplied or as generated in the beginning),lambda_min - selected lambda based on minimal rule,lambda_1se - selected lambda based on 1SE rule, cvm - values of CV(lambda) for each lambda,cvm - values of CV(lambda) for each lambda, cvse - values of SE_CV(lambda) for each lambda
-#' @export cvLASSO
+#' @return
+#' \item{lambda_seq}{the actual sequence of tuning parameters used}
+#' \item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
+#' \item{beta0_vec}{length(lambda_seq) vector of intercepts (original data without center or scale)}
+#' \item{fold_ids}{used splitting into folds from 1 to k (either as supplied or as generated in the beginning)}
+#' \item{lambda_min}{selected lambda based on minimal rule}
+#' \item{lambda_1se}{selected lambda based on 1SE rule}
+#' \item{cvm}{values of CV(lambda) for each lambda}
+#' \item{cvse}{values of SE_CV(lambda) for each lambda}
+#' @export cvadapLASSO
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
-#' fit_cv <- cvLASSO(X, Y)
-cvLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5, fold_ids = NULL, eps = 0.001) {
+#' fit_cv <- cvadapLASSO(X, Y)
+cvadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5, fold_ids = NULL, eps = 0.001) {
   n <- length(Y)
   # Fit Lasso on original data using fitadapLASSO
   fit_lasso <- fitadapLASSO(X, Y, lambda_seq, n_lambda, eps)
@@ -439,11 +447,14 @@ cvLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5,
 }
 # Cross-Validation to choose gamma from a sequence of gamma values
 #' Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
-#'@inheritParams cvLASSO
+#'@inheritParams cvadapLASSO
 #' @param gamma_seq (optional)sequence of gamma values(used in determining weights)
 #' @param n_gamma length of the desired sequence of gamma values
 
-#' @return  cvm = a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma), gamma_min = optimal gamma
+#' @return
+#' \item{cvm}{a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma)}
+#' \item{gamma_min}{optimal gamma}
+#' \item{lambda_min}{selected lambda based on minimal rule}
 #' @export cv.gamma
 #'
 #' @examples
@@ -468,13 +479,13 @@ cv.gamma <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma_seq = NULL, n
     gamma_seq <- seq(0.0001, 10, by = 0.1)
     n_gamma <- length(gamma_seq)
   }
- fit_cv <- cvLASSO(X, Y, lambda_seq , n_lambda , gamma , k , fold_ids , eps)
+ fit_cv <- cvadapLASSO(X, Y, lambda_seq , n_lambda , gamma , k , fold_ids , eps)
  lambda_seq <- fit_cv$lambda_seq
   # defining a cross-validation matrix
   cvm <- matrix(NA, n_gamma, n_lambda)
 
   for (i in 1:n_gamma) {
-    cv <- cvLASSO(X, Y, lambda_seq, n_lambda, gamma_seq[i], k, fold_ids, eps)
+    cv <- cvadapLASSO(X, Y, lambda_seq, n_lambda, gamma_seq[i], k, fold_ids, eps)
     cvm[i, ] <- cv$cvm
   }
   #Finds the row corresponding to the minimum entry of the matrix
