@@ -243,7 +243,10 @@ fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, 
 #' @param lambda_seq (optional)sequence of tuning parameters
 #' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
 #'
-#' @return lambda_seq=the actual sequence of tuning parameters used,beta_mat=p x length(lambda_seq) matrix of corresponding solutions at each lambda value,fmin_vec = fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
+#' @return
+#' \item{lambda_seq}{the actual sequence of tuning parameters used}
+#' \item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value}
+#' \item{fmin_vec}{length(lambda_seq) vector of corresponding objective function values at solution}
 #' @export fitadapLASSOstandardized_seq
 #'
 #' @examples
@@ -314,7 +317,10 @@ fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_la
 #'  Fits adaptive LASSO
 #'@inheritParams scale_X
 #'@inheritParams fitadapLASSOstandardized_seq
-#' @return lambda_seq = the actual sequence of tuning parameters used,beta_mat = p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec = length(lambda_seq) vector of intercepts (original data without center or scale)
+#' @return
+#' \item{lambda_seq}{the actual sequence of tuning parameters used}
+#' \item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
+#' \item{beta0_vec} {length(lambda_seq) vector of intercepts (original data without center or scale)}
 #' @export fitadapLASSO
 #'
 #' @examples

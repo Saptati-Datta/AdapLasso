@@ -20,7 +20,9 @@ fitadapLASSO(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, eps = 0.001)
 \item{eps}{precision level for convergence assessment, default 0.001}
 }
 \value{
-lambda_seq = the actual sequence of tuning parameters used,beta_mat = p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale), beta0_vec = length(lambda_seq) vector of intercepts (original data without center or scale)
+\item{lambda_seq}{the actual sequence of tuning parameters used}
+\item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
+\item{beta0_vec} {length(lambda_seq) vector of intercepts (original data without center or scale)}
 }
 \description{
 Fits adaptive LASSO

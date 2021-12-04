@@ -24,7 +24,9 @@ fitadapLASSOstandardized_seq(
 \item{eps}{precision level for convergence assessment, default 0.001}
 }
 \value{
-lambda_seq=the actual sequence of tuning parameters used,beta_mat=p x length(lambda_seq) matrix of corresponding solutions at each lambda value,fmin_vec = fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
+\item{lambda_seq}{the actual sequence of tuning parameters used}
+\item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value}
+\item{fmin_vec}{length(lambda_seq) vector of corresponding objective function values at solution}
 }
 \description{
 Fits Adaptive Lasso on a sequence of lambda values based on standardized data
