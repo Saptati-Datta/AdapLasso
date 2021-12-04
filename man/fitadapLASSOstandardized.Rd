@@ -24,7 +24,8 @@ fitadapLASSOstandardized(
 \item{eps}{precision level for convergence assessment, default 0.001}
 }
 \value{
-beta = vector of parameters , fmin = optimal value of the objective function
+\item{beta}{vector of parameters}
+\item{fmin}{optimal value of the objective function}
 }
 \description{
 Fits adaptive lasso based on standardized data

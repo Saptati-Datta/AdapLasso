@@ -171,7 +171,9 @@ lasso <- function(Xtilde, Ytilde, beta, lambda) {
 #' @param beta_start p x 1, optional starting point for coordinate descent algorithm
 #' @param eps  precision level for convergence assessment, default 0.001
 #'
-#' @return beta = vector of parameters , fmin = optimal value of the objective function
+#' @return
+#' \item{beta}{vector of parameters}
+#' \item{fmin}{optimal value of the objective function}
 #' @export fitadapLASSOstandardized
 #'
 #' @examples
