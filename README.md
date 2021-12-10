@@ -15,14 +15,9 @@ output:
 devtools::install_github("Saptati-Datta/AdapLasso", build_vignettes = TRUE)
 library(AdapLasso)
 ```
-<font size = "6"> **Algorithm**\ 
-<font size = "2"> The LARS algorithm for adaptive LASSO is as follows:\
-- Define $\pmb{x_j^{**}}=x_j/\hat{w_j}$\, j=1,2,....,p where $x_j$ are the columns of the covariate matrix $X$ and $w_j$ are the weights.\
-- Solve the lasso problem for all $\lambda_n$,\
-$$\pmb{\beta^{**}}=\arg\min_{\pmb{\beta}} ||y-\sum_{j=1}^p x_{j}^{**}\beta_{j}||^2 + \lambda_n \sum_{j=1}^{p}|\beta_j| ,$$
--Output $\beta_j^{(n)*}=\hat{\beta_j^{**}}/\hat{w_j}$\
+
 <font size = "6"> **An Example**\
-<font size = "2">Here we apply our functions to fit an adaptive lasso to the mtcars data set.
+<font size = "2">Here we apply our functions to fit an adaptive lasso to the mtcars data set.\
 ```{r include=TRUE}
 data <- mtcars
 Y <- data$mpg
