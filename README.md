@@ -1,8 +1,7 @@
 
 <font size = "10">_**Adaptive Lasso Using LARS Algorithm**_
 
-<font size = "6">
-###Intended Functionality
+<font size = "6">**Intended Functionality**\
 
 <font size = "2">This package consists of the necessary functions to fit an Adaptive Lasso to a data. There exists certain scenarios where ordinary Lasso turns out to be inconsistent. The main reason for such a discrepancy is that Lasso does not always enjoy oracle properties. In such a case, it is convenient to take resort to Adaptive Lasso technique which satisfies the oracle properties, that is, it has the ability to perform the same asymptotically, as if we knew the true specification of the model beforehand. Such an algorithm was proposed by Zou(2006). This package consists of 9 functions: ```scale_X,standardize,soft,adaplasso,adaplassostd_lambda,adaplassostdseq_lambda,fitadapLASSO,cv.lambda``` and ```cv.gamma```.The functionality of each of these functions have been documented and they together help fit an adaptive lasso model using LARS algorithm.
 
@@ -14,6 +13,7 @@ library(AdapLasso)
 
 ```
 <font size = "6"> **Algorithm**\ 
+
 <font size = "2"> The LARS algorithm for adaptive LASSO is as follows:\
 - Define $\pmb{x_j^{**}}=x_j/\hat{w_j}$\, j=1,2,....,p where $x_j$ are the columns of the covariate matrix $X$ and $w_j$ are the weights.\
 - Solve the lasso problem for all $\lambda_n$,\
