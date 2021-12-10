@@ -7,7 +7,7 @@
 
 <font size = "6"> **Installation Instructions**\
 <font size = "2"> The package can be installed using the following two lines of code:
-```{r}
+```{r include=TRUE}
 devtools::install_github("Saptati-Datta/AdapLasso",build_vignettes=TRUE)
 library(AdapLasso)
 
@@ -20,7 +20,7 @@ $$\pmb{\beta^{**}}=\arg\min_{\pmb{\beta}} ||y-\sum_{j=1}^p x_{j}^{**}\beta_{j}||
 -Output $\beta_j^{(n)*}=\hat{\beta_j^{**}}/\hat{w_j}$\
 <font size = "6">**An Example**\
 <font size = "2">Here we apply our functions to fit an adaptive lasso to the mtcars data set.
-```{r}
+```{r include=TRUE}
 data <- mtcars
 Y <- data$mpg
 X <- cbind(data$disp,data$drat,data$wt)
