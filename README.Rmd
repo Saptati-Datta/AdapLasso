@@ -2,6 +2,9 @@
 output:
   github_document
 ---
+
+knit(input="readme.rmd", output = "readme.md")
+
 <font size = "10">_**Adaptive Lasso Using LARS Algorithm**_
 
 <font size = "6"> **Intended Functionality**\
@@ -21,9 +24,10 @@ library(AdapLasso)
 ```{r include=TRUE}
 data <- mtcars
 Y <- data$mpg
-X <- cbind(data$disp,data$drat,data$wt)
-gamma <- cv.gamma(X,Y)$gamma_min
-lambda <- cv.lambda(X,Y)$tuning_seq
-fit <- fitadaplasso(X,Y,tuning_seq = lambda, gamma = gamma)
+X <- cbind(data$disp, data$drat, data$wt)
+gamma <- cv.gamma(X, Y)$gamma_min
+lambda <- cv.lambda(X, Y)$tuning_seq
+fit <- fitadaplasso(X, Y, tuning_seq = lambda, gamma = gamma)
 plot(fit$tuning_seq, colSums(fit$beta_lamb != 0), ylab = "Non-zero beta", xlab = "tuning_seq",type = "l")
 ```
+
