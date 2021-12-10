@@ -25,4 +25,4 @@ fit <- fitadaplasso(X, Y, tuning_seq = lambda, gamma = gamma)
 plot(fit$tuning_seq, colSums(fit$beta_lamb != 0), ylab = "Non-zero beta", xlab = "tuning_seq",type = "l")
 ```
 
-![Plot of sequences of lambdas vs non-zzero betas](C:/Users/sapta/OneDrive/Desktop/AdapLasso/mtcars plot.png)
+![Plot of sequences of lambdas vs non-zero betas](C:/Users/sapta/OneDrive/Desktop/AdapLasso/mtcars plot.png)
