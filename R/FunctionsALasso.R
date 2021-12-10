@@ -11,7 +11,7 @@
 #' @return A list with the elements
 #' \item{X_w}{A n x p matrix scaled according to LARS algorithm}
 #' \item{weights}{adaptive weights}
-#' @export scale_X
+#' @export
 #'
 #' @examples
 #' EXAMPLE
@@ -58,7 +58,7 @@ scale_X <- function(X, Y, gamma) {
 #' \item{meanY}{mean of Y}
 #' \item{meanX}{Column means after centering the weighted X matrix from scale_X}
 #' \item{weights}{weights obtained by centering X_w which is obtained from scale X}
-#' @export standardize
+#' @export
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
@@ -104,7 +104,7 @@ standardize <- function(X, Y, gamma) {
 #' @param lambda level of soft thresholding
 #'
 #' @return soft-thresholded value
-#' @export soft
+#' @export
 #'
 #' @examples
 #' a = 2
@@ -132,7 +132,7 @@ soft <- function(a, lambda) {
 #' @param lambda tuning parameter(scalar)
 #'
 #' @return Objective function for adaplasso
-#' @export adaplasso
+#' @export
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
@@ -172,7 +172,7 @@ adaplasso <- function(Xstd, Ystd, beta, lambda) {
 #' @return
 #' \item{beta}{vector of parameters}
 #' \item{obj_min}{optimal value of the objective function}
-#' @export adaplassostd_lambda
+#' @export
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
@@ -244,7 +244,7 @@ adaplassostd_lambda <- function(Xstd, Ystd, lambda, beta_init = NULL, eps = 0.00
 #' \item{tuning_seq}{the actual sequence of tuning parameters used}
 #' \item{beta_lamb}{matrix of solutions at each lambda value for a given gamma, dimension is p x len_tuning
 #' \item{obj_min_vec}{vector of optimal values of the objective function for each lambda at solution}
-#' @export adaplassostdseq_lambda
+#' @export
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
@@ -294,7 +294,7 @@ adaplassostdseq_lambda <- function(Xstd, Ystd, tuning_seq = NULL, len_tuning = 6
   }
 
 
-  # Return output
+  # Output
   # tuning_seq - the actual sequence of tuning parameters used
   # beta_lamb - p x length(tuning_seq) matrix of corresponding solutions at each lambda value
   # obj_min_vec - vector of optimal values of the objective function for each lambda at solution
@@ -317,7 +317,7 @@ adaplassostdseq_lambda <- function(Xstd, Ystd, tuning_seq = NULL, len_tuning = 6
 #' \item{tuning_seq}{the actual sequence of tuning parameters used}
 #' \item{beta_lamb}{p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
 #' \item{intercept_vec} {Unscaled vector of intercepts for a fixed gamma and for different lambda values}
-#' @export fitadaplasso
+#' @export
 #'
 #' @examples
 #' #EXAMPLE 1
@@ -346,7 +346,7 @@ fitadaplasso <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01,
   beta_lamb <- beta / (sc$weights * Std$weights)
   intercept_vec <- Std$meanY - ((Std$meanX) %*% beta_lamb)
 
-  # Return output
+  # output
   # tuning_seq - the actual sequence of tuning parameters used
   # beta_lamb - p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
   # intercept_vec - Unscaled vector of intercepts for a fixed gamma and for different lambda values
@@ -370,7 +370,7 @@ fitadaplasso <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01,
 #' \item{lambda_min}{selected lambda based on minimal rule}
 #' \item{lambda_1se}{selected lambda based on 1SE rule}
 #' \item{cv}{values of CV(lambda) for each lambda}
-#' @export cv.lambda
+#' @export
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
@@ -426,7 +426,7 @@ cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k 
   # Find lambda_1SE
   tuning_seqvec <- subset(tuning_seq, cv <= (cv[min] + cvse[min]))
   lambda_1se <- max(tuning_seqvec)
-  # Return output
+  # Output
   # Output from fitadaplasso on the whole data
   # tuning_seq - the actual sequence of tuning parameters used
   # beta_lamb - p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
@@ -447,7 +447,7 @@ cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k 
 #' \item{cv}{a n_gamma x len_tuning matrix giving CV(lambda, gamma) for each pair of (lambda, gamma)}
 #' \item{gamma_min}{optimal gamma}
 #' \item{lambda_min}{selected lambda based on minimal rule}
-#' @export cv.gamma
+#' @export
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
@@ -477,8 +477,8 @@ cv.gamma <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma_seq = NULL,
   cv <- matrix(NA, n_gamma, len_tuning)
 
   for (i in 1:n_gamma) {
-    cv <- cv.lambda(X, Y, tuning_seq, len_tuning, gamma_seq[i], k, id_fold, eps)
-    cv[i, ] <- cv$cv
+    cvlamb <- cv.lambda(X, Y, tuning_seq, len_tuning, gamma_seq[i], k, id_fold, eps)
+    cv[i, ] <- cvlamb$cv
   }
   #Finds the row corresponding to the minimum entry of the matrix
   gamma_min_ind <- which(cv == min(cv), arr.ind = T)[1]
