@@ -26,3 +26,6 @@ plot(fit$tuning_seq, colSums(fit$beta_lamb != 0), ylab = "Non-zero beta", xlab =
 ```
 
 ![Plot of sequences of lambdas vs non-zero betas](C:/Users/sapta/OneDrive/Desktop/AdapLasso/mtcars plot.png)
+
+<font size = "6"> **Details**\
+For further details, refer to the vignette and documentations for each function.
