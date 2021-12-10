@@ -174,8 +174,78 @@ pre code {
 <p><font size="6"> <strong>Installation Instructions</strong><br />
 <font size="2"> The package can be installed using the following two lines of code:</p>
 <pre class="r"><code>devtools::install_github(&quot;Saptati-Datta/AdapLasso&quot;, build_vignettes = TRUE)</code></pre>
-<pre><code>## Skipping install of &#39;AdapLasso&#39; from a github remote, the SHA1 (18b23632) has not changed since last install.
-##   Use `force = TRUE` to force installation</code></pre>
+<pre><code>## Downloading GitHub repo Saptati-Datta/AdapLasso@HEAD</code></pre>
+<pre><code>## 
+##   
+  
+  
+   checking for file &#39;C:\Users\sapta\AppData\Local\Temp\RtmpaCBbOt\remotes2a0c73f655d\Saptati-Datta-AdapLasso-c124239/DESCRIPTION&#39; ...
+  
+   checking for file &#39;C:\Users\sapta\AppData\Local\Temp\RtmpaCBbOt\remotes2a0c73f655d\Saptati-Datta-AdapLasso-c124239/DESCRIPTION&#39; ... 
+  
+v  checking for file &#39;C:\Users\sapta\AppData\Local\Temp\RtmpaCBbOt\remotes2a0c73f655d\Saptati-Datta-AdapLasso-c124239/DESCRIPTION&#39; (344ms)
+## 
+  
+  
+  
+-  preparing &#39;AdapLasso&#39;:
+##    checking DESCRIPTION meta-information ...
+  
+   checking DESCRIPTION meta-information ... 
+  
+v  checking DESCRIPTION meta-information
+## 
+  
+Warning:
+  
+   Warning: C:/Users/sapta/AppData/Local/Temp/RtmpuwZpqO/Rbuild463c78c921aa/AdapLasso/man/adaplassostdseq_lambda.Rd:29: unknown macro &#39;\item&#39;
+##    Warning: C:/Users/sapta/AppData/Local/Temp/RtmpuwZpqO/Rbuild463c78c921aa/AdapLasso/man/adaplassostdseq_lambda.Rd:31: unexpected section header &#39;\description&#39;
+##    Warning: C:/Users/sapta/AppData/Local/Temp/RtmpuwZpqO/Rbuild463c78c921aa/AdapLasso/man/adaplassostdseq_lambda.Rd:34: unexpected section header &#39;\examples&#39;
+##    Warning: C:/Users/sapta/AppData/Local/Temp/RtmpuwZpqO/Rbuild463c78c921aa/AdapLasso/man/adaplassostdseq_lambda.Rd:46: unexpected END_OF_INPUT &#39;
+##    &#39;
+## 
+  
+Warning:
+  
+   Warning: bad markup (extra space?) at fitadapLASSO.Rd:32:21
+## 
+  
+  
+  
+-  installing the package to build vignettes
+## 
+  
+  
+  
+   creating vignettes ...
+  
+   creating vignettes ... 
+  
+v  creating vignettes (2m 46.3s)
+## 
+  
+  
+  
+-  checking for LF line-endings in source and make files and shell scripts
+## 
+  
+  
+  
+-  checking for empty or unneeded directories
+## 
+  
+   Omitted &#39;LazyData&#39; from DESCRIPTION
+## 
+  
+  
+  
+-  building &#39;AdapLasso_0.0.0.9000.tar.gz&#39;
+## 
+  
+   
+## </code></pre>
+<pre><code>## Installing package into &#39;C:/Users/sapta/OneDrive/Documents/R/win-library/4.1&#39;
+## (as &#39;lib&#39; is unspecified)</code></pre>
 <pre class="r"><code>library(AdapLasso)</code></pre>
 <p><font size="6"> <strong>Algorithm</strong>  <font size="2"> The LARS algorithm for adaptive LASSO is as follows:<br />
 - Define <span class="math inline">\(\pmb{x_j^{**}}=x_j/\hat{w_j}\)</span>, j=1,2,….,p where <span class="math inline">\(x_j\)</span> are the columns of the covariate matrix <span class="math inline">\(X\)</span> and <span class="math inline">\(w_j\)</span> are the weights.<br />

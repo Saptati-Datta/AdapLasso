@@ -1,4 +1,7 @@
-
+---
+output:
+  github_document
+---
 <font size = "10">_**Adaptive Lasso Using LARS Algorithm**_
 
 <font size = "6"> **Intended Functionality**\
