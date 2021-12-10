@@ -18,4 +18,13 @@ library(AdapLasso)
 $$\pmb{\beta^{**}}=\arg\min_{\pmb{\beta}} ||y-\sum_{j=1}^p x_{j}^{**}\beta_{j}||^2 + \lambda_n \sum_{j=1}^{p}|\beta_j| ,$$
 -Output $\beta_j^{(n)*}=\hat{\beta_j^{**}}/\hat{w_j}$\
 <font size = "6"> **An Example**\
-<font size = "2">
+<font size = "2">Here we apply our functions to fit an adaptive lasso to the mtcars data set.
+```{r}
+Y <- data$mpg
+X <- cbind(data$disp,data$drat,data$wt)
+gamma <- cv.gamma(X,Y)$gamma_min
+lambda <- cv.lambda(X,Y)$tuning_seq
+fit <- fitadaplasso(X,Y,tuning_seq = lambda, gamma = gamma)
+fit
+plot(fit$tuning_seq, colSums(fit$beta_lamb != 0), ylab = "Non-zero beta", xlab = "tuning_seq",type = "l")
+```
