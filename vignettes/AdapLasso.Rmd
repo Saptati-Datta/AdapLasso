@@ -18,7 +18,7 @@ Lasso is one of the most popular techniques to fit linear regression by using a 
 where the tuning parameter $\lambda_n$ varies with n.\
 The package can be installed and loaded using the following command.
 ```{r setup}
-devtools::install_github("Saptati-Datta/AdapLasso")
+devtools::install_github("Saptati-Datta/AdapLasso", build_vignettes = TRUE)
 library(AdapLasso)
 ```
 
