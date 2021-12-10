@@ -37,24 +37,24 @@ Y <- data$Fertility
 The function ```fitadapLASSO``` fits adaptive lasso to a given data.
 We can fit an adaptive lasso based on the given data in the following way:
 ```{r}
-fit <- fitadapLASSO(X, Y)##All other parameters are free to take default values
+fit <- fitadaplasso(X, Y)##All other parameters are free to take default values
 ##Deriving the accurate lambda sequence
-lambda_vec <- fit$lambda_seq
+lambda_vec <- fit$tuning_seq
 ##Plotting the lambda sequence
-plot(fit$lambda_seq, colSums(fit$beta_mat != 0), ylab = "Non-zero beta", xlab = "Lambda_seq")
-lines(fit$lambda_seq, colSums(fit$beta_mat != 0))
+plot(fit$tuning_seq, colSums(fit$beta_lamb != 0), ylab = "Non-zero beta", xlab = "tuning_seq")
+lines(fit$tuning_seq, colSums(fit$beta_lamb != 0))
 ##Estimated intercept
-beta0 <- fit$beta0_vec
+beta0 <- fit$intercept_vec
 ##Matrix of estimated parameters 
 #Each column corresponding to a particular lambda
-betamat <- fit$beta_mat
+betamat <- fit$beta_lamb
 ```
 
-However, the most important task that remains is to find the pair $(\lambda, \gamma)$ which minimizes the cross-validation error.If we use $\hat {\beta_{ols}}$ to find the adaptive weights,we would want to find an optimal pair of $(\lambda_n,\gamma)$.In such a case, we use two-dimensional cross-validation(as suggested by Zou)to tune the adaptive lasso.For a given $\gamma$ we can use cross-validation along with the LARS algorithm to exclusively search for the optimal $\lambda_n$.We use the function ```cvadapLASSO``` to find such a $\lambda_n$ and the particular value of $\lambda$ for which the cross-validation is minimum, given a default $\gamma$, as follows:
+However, the most important task that remains is to find the pair $(\lambda, \gamma)$ which minimizes the cross-validation error.If we use $\hat {\beta_{ols}}$ to find the adaptive weights,we would want to find an optimal pair of $(\lambda_n,\gamma)$.In such a case, we use two-dimensional cross-validation(as suggested by Zou)to tune the adaptive lasso.For a given $\gamma$ we can use cross-validation along with the LARS algorithm to exclusively search for the optimal $\lambda_n$.We use the function ```cv.lambda``` to find such a $\lambda_n$ and the particular value of $\lambda$ for which the cross-validation is minimum, given a default $\gamma$, as follows:
 ```{r}
-fit_cv <- cvadapLASSO(X, Y)
-#Finding the optimal lambda_seq
-lambda_opt_vec <- fit_cv$lambda_seq
+fit_cv <- cv.lambda(X, Y)
+#Finding the optimal tuning_seq
+lambda_opt_vec <- fit_cv$tuning_seq
 #Finding the desired value of lambda 
 lambda.min <- fit_cv$lambda_min
 ```
@@ -77,7 +77,7 @@ Usually, it is suggested to use $\hat\beta_ols$ for the adaptive weights unless 
 gamma <- 1
 scale_X(X, Y, gamma)
 ```
-Note that, for the purpose of fitting adaptive lasso using functions like ```fitadapLASSO``,```cvadapLASSO```,```cv.gamma``` one do not need to scale the inputs as the functions have been built in a way such that they scale the user inputs.\
+Note that, for the purpose of fitting adaptive lasso using functions like ```fitadapLASSO``,```cv.lambda```,```cv.gamma``` one do not need to scale the inputs as the functions have been built in a way such that they scale the user inputs.\
 <font size = "4"> **References**\
 <font size = "2"> [Hui Zou: The Adaptive Lasso and Its Oracle Properties]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735)
 

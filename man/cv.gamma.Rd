@@ -7,12 +7,12 @@
 cv.gamma(
   X,
   Y,
-  lambda_seq = NULL,
-  n_lambda = 60,
+  tuning_seq = NULL,
+  len_tuning = 60,
   gamma_seq = NULL,
   n_gamma = 60,
   k = 5,
-  fold_ids = NULL,
+  id_fold = NULL,
   eps = 0.001
 )
 }
@@ -21,9 +21,9 @@ cv.gamma(
 
 \item{Y}{n x 1 vector of outputs}
 
-\item{lambda_seq}{(optional)sequence of tuning parameters}
+\item{tuning_seq}{(optional)sequence of tuning parameters}
 
-\item{n_lambda}{length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user}
+\item{len_tuning}{length of desired tuning parameter sequence}
 
 \item{gamma_seq}{(optional)sequence of gamma values(used in determining weights)}
 
@@ -31,12 +31,12 @@ cv.gamma(
 
 \item{k}{number of folds for k-fold cross-validation, default is 5}
 
-\item{fold_ids}{(optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored}
+\item{id_fold}{(optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored}
 
 \item{eps}{precision level for convergence assessment, default 0.001}
 }
 \value{
-\item{cvm}{a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma)}
+\item{cv}{a n_gamma x len_tuning matrix giving CV(lambda, gamma) for each pair of (lambda, gamma)}
 \item{gamma_min}{optimal gamma}
 \item{lambda_min}{selected lambda based on minimal rule}
 }
