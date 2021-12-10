@@ -467,6 +467,7 @@ cv.gamma <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma_seq = NULL,
     }
   }
  #If gamma_seq is not supplied
+  if (is.null(gamma_seq)) {
     gamma_seq <- seq(0.0001, 10, by = 0.1)
     n_gamma <- length(gamma_seq)
   }
