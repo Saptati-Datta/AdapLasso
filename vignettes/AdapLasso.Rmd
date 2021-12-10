@@ -22,6 +22,9 @@ devtools::install_github("Saptati-Datta/AdapLasso", build_vignettes = TRUE)
 library(AdapLasso)
 ```
 
+
+### Fitting Adaptive Lasso on "swiss" data in R\
+
 Here we will discuss the uses of several functions in this package using "swiss" dataset.It is an inbuilt dataset in R which consists of information regarding standardized fertility measure and socio-economic indicators for each of 47 French-speaking provinces of Switzerland at about 1888.The daa frame has 47 observations on 6 variables, each of which is in perncent,i.e., in [0, 100].The variable "Catholic" was scaled to [0, 1].
 Here, we take fertility measure as our response variable and socio-economic indicators, namely, "Agriculture", "Education", "Catholic", "Infant Mortality" as our independent variables.
 
@@ -34,7 +37,7 @@ X <- as.matrix(cbind(data$Agriculture,data$Education,data$Catholic,data$Infant.M
 #Response vector
 Y <- data$Fertility
 ```
-The function ```fitadapLASSO``` fits adaptive lasso to a given data.
+The function ```fitadaplasso``` fits adaptive lasso to a given data.
 We can fit an adaptive lasso based on the given data in the following way:
 ```{r}
 fit <- fitadaplasso(X, Y)##All other parameters are free to take default values
@@ -72,12 +75,31 @@ lambda
 
 
 ```lambda``` and ```gamma``` as obtained from above gives the desired optimal pair.\\
-Usually, it is suggested to use $\hat\beta_ols$ for the adaptive weights unless collinearity is a concern. Otherwise, it is preferable to use the ridge estimator.In this package, the function ```scale_X``` combines both these conditions. It takes the OLS estimator if X has full rank and the ridge estimator if collinearity is detected to accout for the adaptive weights.In order to scale X according to LARS algorithm, we can use the following function:
+Usually, it is suggested to use $\hat\beta_{ols}$ for the adaptive weights unless collinearity is a concern. Otherwise, it is preferable to use the ridge estimator.In this package, the function ```scale_X``` combines both these conditions. It takes the OLS estimator if X has full rank and the ridge estimator if collinearity is detected to accout for the adaptive weights.In order to scale X according to LARS algorithm, we can use the following function:
 ```{r}
 gamma <- 1
 scale_X(X, Y, gamma)
 ```
 Note that, for the purpose of fitting adaptive lasso using functions like ```fitadaplasso``,```cv.lambda```,```cv.gamma``` one do not need to scale the inputs as the functions have been built in a way such that they scale the user inputs.\
+
+### Fitting adaptive lasso on standardized data\
+
+In order to fit adaptive lasso on standardized data, one may use the functions ```adaplassostd_lambda```,```adaplassostdseq_lambda```.
+```{r}
+lambda <- cv.lambda(X, Y)$lambda_min
+lambda_seq <- cv.lambda(X, Y)$tuning_seq
+##Scaling and centering X and Y
+Xstd <- standardize(X, Y, gamma)$Xstd
+Ystd <- standardize(X, Y, gamma)$Ystd
+##Fitting on standardized data for one particular pair of values of gamma and lambda
+adaplassostd_lambda(Xstd, Ystd , lambda = lambda)
+
+##Fitting on standardized for a fixed gamma and a sequence of lambda values
+adaplassostdseq_lambda(Xstd, Ystd, tuning_seq = lambda_seq)
+
+```
 <font size = "4"> **References**\
-<font size = "2"> [Hui Zou: The Adaptive Lasso and Its Oracle Properties]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735)
+<font size = "2"> 
+1.[Hui Zou: The Adaptive Lasso and Its Oracle Properties]({https://www.tandfonline.com/doi/abs/10.1198/016214506000000735)\
+2.[Émeline Courtois,corresponding author Pascale Tubert-Bitter, and Ismaïl Ahmed: New adaptive lasso approaches for variable selection in automated pharmacovigilance signal detection](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8638444/)
 
