@@ -53,53 +53,51 @@ scale_X <- function(X, Y, gamma) {
 #'@inheritParams scale_X
 #'
 #' @return
-#' \item{Xtilde}{scaled X}
-#' \item{Ytilde}{scaled Y}
-#' \item{Ymeans}{mean of Y}
-#' \item{Xmeans}{Column means after centering the weighted X matrix from scale_X}
+#' \item{Xstd}{scaled X}
+#' \item{Ystd}{scaled Y}
+#' \item{meanY}{mean of Y}
+#' \item{meanX}{Column means after centering the weighted X matrix from scale_X}
 #' \item{weights}{weights obtained by centering X_w which is obtained from scale X}
-#' @export standardizeXY
+#' @export standardize
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
 #' gamma <- 2
 #' #Standardizing X and Y
-#' std <- standardizeXY(X , Y , gamma)
+#' std <- standardize(X , Y , gamma)
 #' #Deriving weighted and centered design matrix
-#' Xtilde <- std$Xtilde
+#' Xstd <- std$Xstd
 #' #Column means of centered X_w
-#' Xmeans <- std$Xmeans
+#' meanX <- std$meanX
 #' #Deriving centered Y
-#' Ytilde <- std$Ytilde
-#' #Mean of Ytilde
-#' Ymean <- std$Ymean
+#' Ystd <- std$Ystd
+#' #Mean of Ystd
+#' meanY <- std$meanY
 #' # Weights
 #' weights <- std$weights
-standardizeXY <- function(X, Y, gamma) {
+standardize <- function(X, Y, gamma) {
   n <- length(Y)
   p <- ncol(X)
   # Scaling X
-  Xtilde <- scale_X(X, Y, gamma)$X_w
-  Xmeans <- colMeans(Xtilde)
-  Xcentered <- scale(Xtilde, scale = FALSE)
+  Xstd <- scale_X(X, Y, gamma)$X_w
+  meanX <- colMeans(Xstd)
+  Xcentered <- scale(Xstd, scale = FALSE)
   weights <- sqrt(diag(crossprod(Xcentered) / n))
-  Xtilde <- t(t(Xcentered) / weights)
+  Xstd <- t(t(Xcentered) / weights)
   # Center Y
-  Ymean <- mean(Y)
-  Ytilde <- Y - Ymean
+  meanY <- mean(Y)
+  Ystd <- Y - meanY
   # Return:
-  # Xtilde - centered and appropriately scaled X
-  # Ytilde - centered Y
-  # Ymean - the mean of original Y
-  # Xmeans - means of columns of X (vector)
-  # weights - defined as sqrt(X_j^{\top}X_j/n) after centering of X but before scaling
-  return(list(Xtilde = Xtilde, Ytilde = Ytilde, Ymean = Ymean, Xmeans = Xmeans, weights = weights))
+  # Xstd - centered and appropriately scaled X
+  # Ystd - centered Y
+  # meanY - the mean of original Y
+  # meanX - means of columns of X (vector)
+  # weights - weight for scaling X
+  return(list(Xstd = Xstd, Ystd = Ystd, meanY = meanY, meanX = meanX, weights = weights))
 }
 
-# Soft-thresholding of a scalar a at level lambda
-# a- scalar input
-# lambda-tuning parameter
+
 #' Soft-thresholding of a scalar a at level lambda
 #'
 #' @param a scalar to be soft-thresholded
@@ -121,338 +119,332 @@ soft <- function(a, lambda) {
     return(0)
   }
 }
-# Xtilde - centered and scaled X, n x p
-# Ytilde - centered Y, n x 1
+# Xstd - Centered and Scaled design matrix of order n x p
+# Ystd - centered Y, n x 1
 # lamdba - tuning parameter
 # beta - value of beta at which to evaluate the function
 # Computing the objective function
 #'  Function for soft-thresholding
 #'
-#' @param Xtilde n x p design matrix X scaled according to LARS algorithm and centered to mean 0
-#' @param Ytilde n x 1 centered output vector
+#' @param Xstd n x p design matrix X scaled according to LARS algorithm and centered to mean 0
+#' @param Ystd n x 1 centered output vector
 #' @param beta   p x 1 vector of parameters
 #' @param lambda tuning parameter(scalar)
 #'
-#' @return Objective function for Lasso
-#' @export lasso
+#' @return Objective function for adaplasso
+#' @export adaplasso
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
 #' gamma <- 2
 #' #Standardizing X and Y
-#' std <- standardizeXY(X , Y , gamma)
+#' std <- standardize(X , Y , gamma)
 #' #Deriving weighted and centered design matrix
-#' Xtilde <- std$Xtilde
+#' Xstd <- std$Xstd
 #' #Deriving centered Y
-#' Ytilde <- std$Ytilde
+#' Ystd <- std$Ystd
 #' #Defining beta
 #' beta <- solve(crossprod(X)) %*% t(X) %*% Y
 #' #Lambda value
 #' lambda <- 2
 #' #Objective function
-#' obj <- lasso(Xtilde, Ytilde, beta, lambda)
-lasso <- function(Xtilde, Ytilde, beta, lambda) {
-  n <- length(Ytilde)
+#' obj <- adaplasso(Xstd, Ystd, beta, lambda)
+adaplasso <- function(Xstd, Ystd, beta, lambda) {
+  n <- length(Ystd)
   # objective function
-  fobj <- sum((Ytilde - (Xtilde %*% beta))^2) / (2 * n) + sum(lambda * abs(beta))
+  obj <- sum((Ystd - (Xstd %*% beta))^2) / (2 * n) + sum(lambda * abs(beta))
   # Return
-  return(fobj)
+  return(obj)
 }
 
-# Fit LASSO on standardized data for a given lambda
-# Xtilde - centered and scaled X, n x p
-# Ytilde - centered Y, n x 1 (vector)
+# Fit adaptive lasso on standardized data for a given lambda
+# Xstd - centered and scaled X, n x p
+# Ystd - An input vector of order n x 1
 # lamdba - tuning parameter
-# beta_start - p vector, an optional starting point for coordinate-descent algorithm
+# beta_init - optional starting point for the coordinate descent algorithm for a given lamba(p x 1 vector)
 # eps - precision level for convergence assessment, default 0.001
-#' Fits adaptive lasso based on standardized data
-#'@inheritParams lasso
-#' @param beta_start p x 1, optional starting point for coordinate descent algorithm
+#' Fits adaptive adaplasso based on standardized data
+#'@inheritParams adaplasso
+#' @param beta_init p x 1, optional starting point for coordinate descent algorithm
 #' @param eps  precision level for convergence assessment, default 0.001
 #'
 #' @return
 #' \item{beta}{vector of parameters}
-#' \item{fmin}{optimal value of the objective function}
-#' @export fitadapLASSOstandardized
+#' \item{obj_min}{optimal value of the objective function}
+#' @export adaplassostd_lambda
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
 #' gamma <- 2
 #' #Standardizing X and Y
-#' std <- standardizeXY(X , Y , gamma)
+#' std <- standardize(X , Y , gamma)
 #' #Deriving weighted and centered design matrix
-#' Xtilde <- std$Xtilde
+#' Xstd <- std$Xstd
 #' #Deriving centered Y
-#' Ytilde <- std$Ytilde
+#' Ystd <- std$Ystd
 #' # tuning parameter
 #' lambda  <- 0.1
-#' fit <- fitadapLASSOstandardized(Xtilde, Ytilde, lambda)
-fitadapLASSOstandardized <- function(Xtilde, Ytilde, lambda, beta_start = NULL, eps = 0.001) {
-  n <- length(Ytilde)
-  p <- ncol(Xtilde)
-  # Check that n is the same between Xtilde and Ytilde
-  if (nrow(Xtilde) != length(Ytilde)) {
+#' fit <- adaplassostd_lambda(Xstd, Ystd, lambda)
+adaplassostd_lambda <- function(Xstd, Ystd, lambda, beta_init = NULL, eps = 0.001) {
+  n <- length(Ystd)
+  p <- ncol(Xstd)
+  # Checking compatibility
+  # If Number of rows of X and Dimension of Y match
+  if (nrow(Xstd) != length(Ystd)) {
     stop("Error: nrow(X) and length(Y) are not equal")
   }
-  # Check that lambda is non-negative
+  # If lambda is non-negative
   if (lambda < 0) {
     stop("Error: Lambda is negative")
   }
-  #  Check for starting point beta_start. If none supplied, initialize with a vector of zeros. If supplied, check for compatibility with Xtilde in terms of p
-  if (is.null(beta_start)) {
-    beta_start <- rep(0, p)
-  } else if (length(beta_start) != p) {
-    stop("Error: dimension of p and ncol(X) do not match", ncol(Xtilde))
+  #  Initializing beta_init
+  if (is.null(beta_init)) {
+    beta_init <- rep(0, p)
+  } else if (length(beta_init) != p) {
+    stop("Error: dimension of p and ncol(X) do not match", ncol(Xstd))
   }
-  # Coordinate-descent implementation. Stop when the difference between objective functions is less than eps for the first time.
-  # For example, if you have 3 iterations with objectives 3, 1, 0.99999, your should return fmin = 0.99999, and not have another iteration
-  # Get sample size
-  n <- length(Ytilde)
-  beta <- beta_start
-  curr_obj <- lasso(Xtilde, Ytilde, beta, lambda)
+ #Assigning variables for coordinate descent implementation
+  n <- length(Ystd)
+  beta <- beta_init
+  curr_obj <- adaplasso(Xstd, Ystd, beta, lambda)
   last_obj <- Inf
-  r <- Ytilde - Xtilde %*% beta_start
+  r <- Ystd - Xstd %*% beta_init
   while ((last_obj - curr_obj) > eps) {
     for (j in 1:p)
     {
       beta_old <- beta[j]
-      beta[j] <- soft(beta[j] + (crossprod(Xtilde[, j], r)) / n, lambda)
-      r <- r + Xtilde[, j] * (beta_old - beta[j])
+      beta[j] <- soft(beta[j] + (crossprod(Xstd[, j], r)) / n, lambda)
+      r <- r + Xstd[, j] * (beta_old - beta[j])
     }
 
     last_obj <- curr_obj
-    curr_obj <- lasso(Xtilde, Ytilde, beta, lambda)
+    curr_obj <- adaplasso(Xstd, Ystd, beta, lambda)
   }
-  fmin <- curr_obj # Minimum value of the objective function
+  obj_min <- curr_obj # Minimum value of the objective function
   # Return
-  # beta - the solution (a vector)
-  # fmin - optimal function value (value of objective at beta, scalar)
-  return(list(beta = beta, fmin = fmin))
+  # beta - vector of parameter estimates
+  # obj_min - optimal value of the objective function at beta
+  return(list(beta = beta, obj_min = obj_min))
 }
 
-# Fit LASSO on standardized data for a sequence of lambda values. Sequential version of a previous function.
-# Xtilde - centered and scaled X, n x p
-# Ytilde - centered Y, n x 1
-# lamdba_seq - sequence of tuning parameters, optional
-# n_lambda - length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
+# Fit adaptive lasso on standardized data for a sequence of lambda values for a given value of gamma.
+# Xstd - centered and scaled X, n x p
+# Ystd - centered Y, n x 1
+# tuning_seq - sequence of tuning parameters, optional
+# len_tuning - length of desired tuning parameter sequence
 # eps - precision level for convergence assessment, default 0.001
-#' Fits Adaptive Lasso on a sequence of lambda values based on standardized data
-#'@inheritParams fitadapLASSOstandardized
-#' @param lambda_seq (optional)sequence of tuning parameters
-#' @param n_lambda length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
+#' Fits Adaptive adaplasso on a sequence of lambda values based on standardized data
+#'@inheritParams adaplassostd_lambda
+#' @param tuning_seq (optional)sequence of tuning parameters
+#' @param len_tuning length of desired tuning parameter sequence
 #'
 #' @return
-#' \item{lambda_seq}{the actual sequence of tuning parameters used}
-#' \item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value}
-#' \item{fmin_vec}{length(lambda_seq) vector of corresponding objective function values at solution}
-#' @export fitadapLASSOstandardized_seq
+#' \item{tuning_seq}{the actual sequence of tuning parameters used}
+#' \item{beta_lamb}{matrix of solutions at each lambda value for a given gamma, dimension is p x len_tuning
+#' \item{obj_min_vec}{vector of optimal values of the objective function for each lambda at solution}
+#' @export adaplassostdseq_lambda
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
 #' gamma <- 2
 #' #Standardizing X and Y
-#' std <- standardizeXY(X , Y , gamma)
+#' std <- standardize(X , Y , gamma)
 #' #Deriving weighted and centered design matrix
-#' Xtilde <- std$Xtilde
+#' Xstd <- std$Xstd
 #' #Deriving centered Y
-#' Ytilde <- std$Ytilde
-#' fit <- fitadapLASSOstandardized_seq(Xtilde, Ytilde)
-fitadapLASSOstandardized_seq <- function(Xtilde, Ytilde, lambda_seq = NULL, n_lambda = 60, eps = 0.001) {
-  n <- length(Ytilde)
-  # Check that n is the same between Xtilde and Ytilde
-  if (nrow(Xtilde) != length(Ytilde)) {
+#' Ystd <- std$Ystd
+#' fit <- adaplassostdseq_lambda(Xstd, Ystd)
+adaplassostdseq_lambda <- function(Xstd, Ystd, tuning_seq = NULL, len_tuning = 60, eps = 0.001) {
+  n <- length(Ystd)
+  # Compatibility check for n
+  if (nrow(Xstd) != length(Ystd)) {
     stop("Dimensions of X and Y do not match")
   }
 
-  # Check for the user-supplied lambda-seq (see below)
-  if (is.null(lambda_seq) == FALSE) {
-    # If lambda_seq is supplied, only keep values that are >= 0, and make sure the values are sorted from largest to smallest. If none of the supplied values satisfy the requirement, print the warning message and proceed as if the values were not supplied.
-    lambda_seq <- sort(lambda_seq[lambda_seq >= 0], decreasing = TRUE)
-    if (length(lambda_seq) == 0) {
-      print("Warning: Lambda sequence not supplied")
-      lambda_seq <- NULL
+  # Checks for tuning_seq
+  if (is.null(tuning_seq) == FALSE) {
+    # If tuning_seq is supplied, only keep values that are >= 0, and make sure the values are sorted from largest to smallest. If none of the supplied values satisfy the requirement, print the warning message and proceed as if the values were not supplied.
+    tuning_seq <- sort(tuning_seq[tuning_seq >= 0], decreasing = TRUE)
+    if (length(tuning_seq) == 0) {
+      print("Warning: Sequence of tuning parameters for fixed gamma not supplied")
+      tuning_seq <- NULL
     } else {
-      n_lambda <- length(lambda_seq)
+      len_tuning <- length(tuning_seq)
     }
   }
-  # If lambda_seq is not supplied, calculate lambda_max (the minimal value of lambda that gives zero solution), and create a sequence of length n_lambda as
-  if (is.null(lambda_seq)) {
-    lambda_max <- max(abs(crossprod(Xtilde, Ytilde)) / n)
-    lambda_seq <- exp(seq(log(lambda_max), log(0.01), length = n_lambda))
+  # If tuning_seq is not supplied
+  if (is.null(tuning_seq)) {
+    lambda_max <- max(abs(crossprod(Xstd, Ystd)) / n)
+    tuning_seq <- exp(seq(log(lambda_max), log(0.05), length = len_tuning))
   }
 
-  p <- ncol(Xtilde)
-  # Apply fitadapLASSOstandardized going from largest to smallest lambda (make sure supplied eps is carried over). Use warm starts strategy discussed in class for setting the starting values.
+  p <- ncol(Xstd)
   beta <- rep(0, p)
-  beta_mat <- matrix(0, p, n_lambda)
-  fmin_vec <- rep(0, n_lambda)
+  beta_lamb <- matrix(0, p, len_tuning)
+  obj_min_vec <- rep(0, len_tuning)
 
-  for (i in 1:(n_lambda)) {
-    fit <- fitadapLASSOstandardized(Xtilde, Ytilde, lambda_seq[i], beta_start = beta, eps)
-    beta_mat[, i] <- fit$beta
-    fmin_vec[i] <- fit$fmin
+  for (i in 1:(len_tuning)) {
+    fit <- adaplassostd_lambda(Xstd, Ystd, tuning_seq[i], beta_init = beta, eps)
+    beta_lamb[, i] <- fit$beta
+    obj_min_vec[i] <- fit$obj_min
     beta <- fit$beta
   }
 
 
   # Return output
-  # lambda_seq - the actual sequence of tuning parameters used
-  # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value
-  # fmin_vec - length(lambda_seq) vector of corresponding objective function values at solution
-  return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, fmin_vec = fmin_vec))
+  # tuning_seq - the actual sequence of tuning parameters used
+  # beta_lamb - p x length(tuning_seq) matrix of corresponding solutions at each lambda value
+  # obj_min_vec - vector of optimal values of the objective function for each lambda at solution
+  return(list(tuning_seq = tuning_seq, beta_lamb = beta_lamb, obj_min_vec = obj_min_vec))
 }
 
 
-#  Fit LASSO on original data using a sequence of lambda values
+#  Fit adaptive lasso on original data using a sequence of lambda values
 # X - n x p matrix of covariates
 # Y - n x 1 response vector
-# lambda_seq - sequence of tuning parameters, optional
-# n_lambda - length of desired tuning parameter sequence, is only used when the tuning sequence is not supplied by the user
+# tuning_seq - sequence of tuning parameters, optional
+# len_tuning - length of desired tuning parameter sequence
 # eps - precision level for convergence assessment, default 0.001
 
 
-#'  Fits adaptive LASSO
+#'  Fits adaptive lasso
 #'@inheritParams scale_X
-#'@inheritParams fitadapLASSOstandardized_seq
+#'@inheritParams adaplassostdseq_lambda
 #' @return
-#' \item{lambda_seq}{the actual sequence of tuning parameters used}
-#' \item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
-#' \item{beta0_vec} {length(lambda_seq) vector of intercepts (original data without center or scale)}
-#' @export fitadapLASSO
+#' \item{tuning_seq}{the actual sequence of tuning parameters used}
+#' \item{beta_lamb}{p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
+#' \item{intercept_vec} {Unscaled vector of intercepts for a fixed gamma and for different lambda values}
+#' @export fitadaplasso
 #'
 #' @examples
 #' #EXAMPLE 1
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
 #' gamma <- 2
-#' # Fits adaptive LASSO
-#' fit <- fitadapLASSO(X , Y , gamma = gamma)
+#' # Fits adaptive adaplasso
+#' fit <- fitadaplasso(X , Y , gamma = gamma)
 #' # EXAMPLE 2
 #' X <- matrix(rchisq(500, 3), 50, 10)
 #' Y <- rbinom(50)
-#' lambda_seq <- runif(100, 1, 2)
-#' #Fits adaptive lasso
-#' fit2 <- fitadapLASSO(X, Y, lambda_seq = lambda_seq, gamma = 0.1, eps = 0.002 )
-fitadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, eps = 0.001) {
-  # Center and standardize X,Y based on standardizeXY function
+#' tuning_seq <- runif(100, 1, 2)
+#' #Fits adaptive adaplasso
+#' fit2 <- fitadaplasso(X, Y, tuning_seq = tuning_seq, gamma = 0.1, eps = 0.002 )
+fitadaplasso <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, eps = 0.001) {
+  # Center and standardize X,Y based on standardize and scale_X functions
   sc <- scale_X(X, Y, gamma)
-  Std <- standardizeXY(X, Y, gamma)
-  X <- Std$Xtilde
-  Y <- Std$Ytilde
-
-  # Fit Lasso on a sequence of values using fitadapLASSOstandardized_seq (make sure the parameters carry over)
-  fit <- fitadapLASSOstandardized_seq(X, Y, lambda_seq, n_lambda, eps)
-  n_lambda <- length(fit$lambda_seq)
-  lambda_seq <- fit$lambda_seq
-  # Perform back scaling and centering to get original intercept and coefficient vector for each lambda
-  beta <- fit$beta_mat
-  beta_mat <- beta / (sc$weights * Std$weights)
-  beta0_vec <- Std$Ymean - ((Std$Xmeans) %*% beta_mat)
+  Std <- standardize(X, Y, gamma)
+  X <- Std$Xstd
+  Y <- Std$Ystd
+  fit <- adaplassostdseq_lambda(X, Y, tuning_seq, len_tuning, eps)
+  len_tuning <- length(fit$tuning_seq)
+  tuning_seq <- fit$tuning_seq
+  # Scaling and centering to get original intercept and coefficient vector for each lambda
+  beta <- fit$beta_lamb
+  beta_lamb <- beta / (sc$weights * Std$weights)
+  intercept_vec <- Std$meanY - ((Std$meanX) %*% beta_lamb)
 
   # Return output
-  # lambda_seq - the actual sequence of tuning parameters used
-  # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
-  # beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale)
-  return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec))
+  # tuning_seq - the actual sequence of tuning parameters used
+  # beta_lamb - p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
+  # intercept_vec - Unscaled vector of intercepts for a fixed gamma and for different lambda values
+  return(list(tuning_seq = tuning_seq, beta_lamb = beta_lamb, intercept_vec = intercept_vec))
 }
 
 
 
 
 #' Perform cross-validation to select the best fit and finds the optimal lambda for a particular gamma value
-#' @inheritParams fitadapLASSO
+#' @inheritParams fitadaplasso
 #' @param k  number of folds for k-fold cross-validation, default is 5
-#' @param fold_ids (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
+#' @param id_fold (optional) vector of length n specifying the folds assignment (from 1 to max(folds_ids)), if supplied the value of k is ignored
 #'
 #'
 #' @return
-#' \item{lambda_seq}{the actual sequence of tuning parameters used}
-#' \item{beta_mat}{p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
-#' \item{beta0_vec}{length(lambda_seq) vector of intercepts (original data without center or scale)}
-#' \item{fold_ids}{used splitting into folds from 1 to k (either as supplied or as generated in the beginning)}
+#' \item{tuning_seq}{the actual sequence of tuning parameters used}
+#' \item{beta_lamb}{p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)}
+#' \item{intercept_vec}{Unscaled vector of intercepts for a fixed gamma and for different lambda values}
+#' \item{id_fold}{used splitting into folds from 1 to k (either as supplied or as generated in the beginning)}
 #' \item{lambda_min}{selected lambda based on minimal rule}
 #' \item{lambda_1se}{selected lambda based on 1SE rule}
-#' \item{cvm}{values of CV(lambda) for each lambda}
-#' \item{cvse}{values of SE_CV(lambda) for each lambda}
-#' @export cvadapLASSO
+#' \item{cv}{values of CV(lambda) for each lambda}
+#' @export cv.lambda
 #'
 #' @examples
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
-#' fit_cv <- cvadapLASSO(X, Y)
-cvadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k = 5, fold_ids = NULL, eps = 0.001) {
+#' fit_cv <- cv.lambda(X, Y)
+cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k = 5, id_fold = NULL, eps = 0.001) {
   n <- length(Y)
-  # Fit Lasso on original data using fitadapLASSO
-  fit_lasso <- fitadapLASSO(X, Y, lambda_seq, n_lambda, eps)
-  #  If fold_ids is NULL, split the data randomly into k folds. If fold_ids is not NULL, split the data according to supplied fold_ids.
-  if (is.null(fold_ids)) {
-    fold_ids <- sample(1:n, size = n) %% k + 1
+  # Fit adaplasso on original data using fitadaplasso
+  fit_adaplasso <- fitadaplasso(X, Y, tuning_seq, len_tuning, eps)
+  #  If id_fold is NULL, split the data randomly into k folds. If id_fold is not NULL, split the data according to supplied id_fold.
+  if (is.null(id_fold)) {
+    id_fold <- sample(1:n, size = n) %% k + 1
   }
 
 
   # Defining vectors for loop over folds and lambdas
-  lambda_seq <- fit_lasso$lambda_seq
-  n_lambda <- length(lambda_seq)
-  cvm <- rep(NA, n_lambda) # want to have CV(lambda)
-  cvse <- rep(NA, n_lambda) # want to have SE_CV(lambda)
-  cv_folds <- matrix(NA, k, n_lambda)
+  tuning_seq <- fit_adaplasso$tuning_seq
+  len_tuning <- length(tuning_seq)
+  cv <- rep(NA, len_tuning) # want to have CV(lambda)
+  cvse <- rep(NA, len_tuning) # want to have SE_CV(lambda)
+  cv_folds <- matrix(NA, k, len_tuning)
 
   for (fold in 1:k) {
-    #  Create training data xtrain and ytrain, everything except fold
-    Xtrain <- X[fold_ids != fold, ]
-    Ytrain <- Y[fold_ids != fold]
+    #  training data xtrain and ytrain
+    Xtrain <- X[id_fold != fold, ]
+    Ytrain <- Y[id_fold != fold]
 
 
-    # Create testing data xtest and ytest, everything in fold
-    Xtest <- X[fold_ids == fold, ]
-    Ytest <- Y[fold_ids == fold]
-    # Calculate LASSO on each fold using fitadapLASSO, and perform any additional calculations needed for CV(lambda) and SE_CV(lambda)
-    # Fitting Lasso
-    Lasso <- fitadapLASSO(Xtrain, Ytrain, lambda_seq, gamma, n_lambda, eps)
+    # testing data xtest and ytest
+    Xtest <- X[id_fold == fold, ]
+    Ytest <- Y[id_fold == fold]
+
+    # Fitting adaptive lasso
+    adaplasso <- fitadaplasso(Xtrain, Ytrain, tuning_seq, gamma, len_tuning, eps)
 
 
-    #  Complete with anything else you need for cvm and cvse
-    cv_folds[fold, ] <- colSums((Ytest - t(c(Lasso$beta0_vec) + t(Xtest %*% Lasso$beta_mat)))^2)
+    #  Complete with anything else you need for cv and cvse
+    cv_folds[fold, ] <- colSums((Ytest - t(c(adaplasso$intercept_vec) + t(Xtest %*% adaplasso$beta_lamb)))^2)
   }
 
 
-  # To get cvm and cvse from cv_folds
-  beta_mat <- fit_lasso$beta_mat
-  beta0_vec <- fit_lasso$beta0_vec
-  cvm <- colMeans(cv_folds)
+  # To get cv and cvse from cv_folds
+  beta_lamb <- fit_adaplasso$beta_lamb
+  intercept_vec <- fit_adaplasso$intercept_vec
+  cv <- colMeans(cv_folds)
   cvse <- apply(cv_folds, 2, sd) / sqrt(k)
 
   # Find lambda_min
-  min <- which.min(cvm)
-  lambda_min <- lambda_seq[min]
+  min <- which.min(cv)
+  lambda_min <- tuning_seq[min]
 
 
   # Find lambda_1SE
-  lambda_seqvec <- subset(lambda_seq, cvm <= (cvm[min] + cvse[min]))
-  lambda_1se <- max(lambda_seqvec)
+  tuning_seqvec <- subset(tuning_seq, cv <= (cv[min] + cvse[min]))
+  lambda_1se <- max(tuning_seqvec)
   # Return output
-  # Output from fitadapLASSO on the whole data
-  # lambda_seq - the actual sequence of tuning parameters used
-  # beta_mat - p x length(lambda_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
-  # beta0_vec - length(lambda_seq) vector of intercepts (original data without center or scale)
-  # fold_ids - used splitting into folds from 1 to k (either as supplied or as generated in the beginning)
+  # Output from fitadaplasso on the whole data
+  # tuning_seq - the actual sequence of tuning parameters used
+  # beta_lamb - p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
+  # intercept_vec - Unscaled vector of intercepts for a fixed gamma and for different lambda values
+  # id_fold - used splitting into folds from 1 to k (either as supplied or as generated in the beginning)
   # lambda_min - selected lambda based on minimal rule
   # lambda_1se - selected lambda based on 1SE rule
-  # cvm - values of CV(lambda) for each lambda
-  # cvse - values of SE_CV(lambda) for each lambda
-  return(list(lambda_seq = lambda_seq, beta_mat = beta_mat, beta0_vec = beta0_vec, fold_ids = fold_ids, lambda_min = lambda_min, lambda_1se = lambda_1se, cvm = cvm, cvse = cvse))
+  # cv - values of CV(lambda) for each lambda
+  return(list(tuning_seq = tuning_seq, beta_lamb = beta_lamb, intercept_vec = intercept_vec, id_fold = id_fold, lambda_min = lambda_min, lambda_1se = lambda_1se, cv = cv))
 }
 # Cross-Validation to choose gamma from a sequence of gamma values
 #' Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
-#'@inheritParams cvadapLASSO
+#'@inheritParams cv.lambda
 #' @param gamma_seq (optional)sequence of gamma values(used in determining weights)
 #' @param n_gamma length of the desired sequence of gamma values
 
 #' @return
-#' \item{cvm}{a n_gamma x n_lambda matrix giving CV(lambda, gamma) for each pair of (lambda, gamma)}
+#' \item{cv}{a n_gamma x len_tuning matrix giving CV(lambda, gamma) for each pair of (lambda, gamma)}
 #' \item{gamma_min}{optimal gamma}
 #' \item{lambda_min}{selected lambda based on minimal rule}
 #' @export cv.gamma
@@ -461,12 +453,12 @@ cvadapLASSO <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma = 0.01, k 
 #' X <- matrix(rnorm(500), 50, 10)
 #' Y <- rnorm(50)
 #' fit_cv_gamma <- cv.gamma(X , Y)
-cv.gamma <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma_seq = NULL, n_gamma = 60, k = 5, fold_ids = NULL, eps = 0.001) {
+cv.gamma <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma_seq = NULL, n_gamma = 60, k = 5, id_fold = NULL, eps = 0.001) {
   n <- length(Y)
-  #  Check for the user-supplied gamma-seq (see below)
-  if (is.null(lambda_seq) == FALSE) {
-    # If lambda_seq is supplied, only keep values that are >= 0, and make sure the values are sorted from largest to smallest. If none of the supplied values satisfy the requirement, print the warning message and proceed as if the values were not supplied.
-    lambda_seq <- gamma_seq[gamma_seq > 0]
+  #  Check for the user-supplied gamma-seq
+  if (is.null(tuning_seq) == FALSE) {
+    # If gamma_seq is supplied, only keep values that are >= 0, and make sure the values are sorted from largest to smallest. If none of the supplied values satisfy the requirement, print the warning message and proceed as if the values were not supplied.
+    gamma_seq <- gamma_seq[gamma_seq > 0]
     if (length(gamma_seq) == 0) {
       print("Warning: gamma sequence not supplied")
       gamma_seq <- NULL
@@ -474,29 +466,28 @@ cv.gamma <- function(X, Y, lambda_seq = NULL, n_lambda = 60, gamma_seq = NULL, n
       n_gamma <- length(gamma_seq)
     }
   }
-  # If lambda_seq is not supplied, calculate lambda_max (the minimal value of lambda that gives zero solution), and create a sequence of length n_lambda as
-  if (is.null(gamma_seq)) {
+ #If gamma_seq is not supplied
     gamma_seq <- seq(0.0001, 10, by = 0.1)
     n_gamma <- length(gamma_seq)
   }
- fit_cv <- cvadapLASSO(X, Y, lambda_seq , n_lambda , gamma , k , fold_ids , eps)
- lambda_seq <- fit_cv$lambda_seq
+ fit_cv <- cv.lambda(X, Y, tuning_seq , len_tuning , gamma , k , id_fold , eps)
+ tuning_seq <- fit_cv$tuning_seq
   # defining a cross-validation matrix
-  cvm <- matrix(NA, n_gamma, n_lambda)
+  cv <- matrix(NA, n_gamma, len_tuning)
 
   for (i in 1:n_gamma) {
-    cv <- cvadapLASSO(X, Y, lambda_seq, n_lambda, gamma_seq[i], k, fold_ids, eps)
-    cvm[i, ] <- cv$cvm
+    cv <- cv.lambda(X, Y, tuning_seq, len_tuning, gamma_seq[i], k, id_fold, eps)
+    cv[i, ] <- cv$cv
   }
   #Finds the row corresponding to the minimum entry of the matrix
-  gamma_min_ind <- which(cvm == min(cvm), arr.ind = T)[1]
+  gamma_min_ind <- which(cv == min(cv), arr.ind = T)[1]
   #Finds the gamma which minimizes the cross-validation error
   gamma_min <- gamma_seq[gamma_min_ind]
   #Finds the column corresponding to the minimum entry of the matrix
-  lambda_min_ind <- which(cvm == min(cvm), arr.ind = T)[2]
+  lambda_min_ind <- which(cv == min(cv), arr.ind = T)[2]
   #Finds the gamma which minimizes the cross-validation error
-  lambda_min <- lambda_seq[lambda_min_ind]
+  lambda_min <- tuning_seq[lambda_min_ind]
 
   # Return
-  return(list(cvm = cvm, gamma_min = gamma_min,lambda_min = lambda_min))
+  return(list(cv = cv, gamma_min = gamma_min,lambda_min = lambda_min))
 }
