@@ -3,7 +3,6 @@ output:
   github_document
 ---
 
-knit(input="readme.rmd", output = "readme.md")
 
 <font size = "10">_**Adaptive Lasso Using LARS Algorithm**_
 
