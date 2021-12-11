@@ -418,13 +418,12 @@ cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k 
   min <- which.min(cv)
   lambda_min <- tuning_seq[min]
   # Output
-  # Output from fitadaplasso on the whole data
   # tuning_seq - the actual sequence of tuning parameters used
   # beta_lamb - p x length(tuning_seq) matrix of corresponding solutions at each lambda value (original data without center or scale)
   # intercept_vec - Unscaled vector of intercepts for a fixed gamma and for different lambda values
-  # id_fold - used splitting into folds from 1 to k (either as supplied or as generated in the beginning)
-  # lambda_min - selected lambda based on minimal rule
-  # cv - values of CV(lambda) for each lambda
+  # id_fold - fold splits
+  # lambda_min - optimal solution for lambda
+  # cv - values of CV(lambda) for each lambda for a fixed gamma
   return(list(tuning_seq = tuning_seq, beta_lamb = beta_lamb, intercept_vec = intercept_vec, id_fold = id_fold, lambda_min = lambda_min, cv = cv))
 }
 # Cross-Validation to choose gamma from a sequence of gamma values
