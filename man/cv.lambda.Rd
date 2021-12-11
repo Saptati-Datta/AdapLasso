@@ -38,7 +38,6 @@ cv.lambda(
 \item{intercept_vec}{Unscaled vector of intercepts for a fixed gamma and for different lambda values}
 \item{id_fold}{used splitting into folds from 1 to k (either as supplied or as generated in the beginning)}
 \item{lambda_min}{selected lambda based on minimal rule}
-\item{lambda_1se}{selected lambda based on 1SE rule}
 \item{cv}{values of CV(lambda) for each lambda}
 }
 \description{
