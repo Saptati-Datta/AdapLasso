@@ -414,7 +414,7 @@ cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k 
   cv <- colMeans(cv_folds)
   cvse <- apply(cv_folds, 2, sd) / sqrt(k)
 
-  # Find lambda_min
+  # Optimal lambda
   min <- which.min(cv)
   lambda_min <- tuning_seq[min]
   # Output
