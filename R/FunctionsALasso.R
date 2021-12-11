@@ -368,7 +368,6 @@ fitadaplasso <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01,
 #' \item{intercept_vec}{Unscaled vector of intercepts for a fixed gamma and for different lambda values}
 #' \item{id_fold}{used splitting into folds from 1 to k (either as supplied or as generated in the beginning)}
 #' \item{lambda_min}{selected lambda based on minimal rule}
-#' \item{lambda_1se}{selected lambda based on 1SE rule}
 #' \item{cv}{values of CV(lambda) for each lambda}
 #' @export
 #'
@@ -378,9 +377,9 @@ fitadaplasso <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01,
 #' fit_cv <- cv.lambda(X, Y)
 cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k = 5, id_fold = NULL, eps = 0.001) {
   n <- length(Y)
-  # Fit adaplasso on original data using fitadaplasso
+  # Fit adaptive lasso on original data using fitadaplasso
   fit_adaplasso <- fitadaplasso(X, Y, tuning_seq, len_tuning, eps)
-  #  If id_fold is NULL, split the data randomly into k folds. If id_fold is not NULL, split the data according to supplied id_fold.
+  # Splitting data according to fold ids
   if (is.null(id_fold)) {
     id_fold <- sample(1:n, size = n) %% k + 1
   }
@@ -405,9 +404,6 @@ cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k 
 
     # Fitting adaptive lasso
     adaplasso <- fitadaplasso(Xtrain, Ytrain, tuning_seq, gamma, len_tuning, eps)
-
-
-    #  Complete with anything else you need for cv and cvse
     cv_folds[fold, ] <- colSums((Ytest - t(c(adaplasso$intercept_vec) + t(Xtest %*% adaplasso$beta_lamb)))^2)
   }
 
@@ -421,11 +417,6 @@ cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k 
   # Find lambda_min
   min <- which.min(cv)
   lambda_min <- tuning_seq[min]
-
-
-  # Find lambda_1SE
-  tuning_seqvec <- subset(tuning_seq, cv <= (cv[min] + cvse[min]))
-  lambda_1se <- max(tuning_seqvec)
   # Output
   # Output from fitadaplasso on the whole data
   # tuning_seq - the actual sequence of tuning parameters used
@@ -433,9 +424,8 @@ cv.lambda <- function(X, Y, tuning_seq = NULL, len_tuning = 60, gamma = 0.01, k 
   # intercept_vec - Unscaled vector of intercepts for a fixed gamma and for different lambda values
   # id_fold - used splitting into folds from 1 to k (either as supplied or as generated in the beginning)
   # lambda_min - selected lambda based on minimal rule
-  # lambda_1se - selected lambda based on 1SE rule
   # cv - values of CV(lambda) for each lambda
-  return(list(tuning_seq = tuning_seq, beta_lamb = beta_lamb, intercept_vec = intercept_vec, id_fold = id_fold, lambda_min = lambda_min, lambda_1se = lambda_1se, cv = cv))
+  return(list(tuning_seq = tuning_seq, beta_lamb = beta_lamb, intercept_vec = intercept_vec, id_fold = id_fold, lambda_min = lambda_min, cv = cv))
 }
 # Cross-Validation to choose gamma from a sequence of gamma values
 #' Cross-Validation to choose the optimal gamma from a sequence of gamma values for a particular sequence of lambdas
